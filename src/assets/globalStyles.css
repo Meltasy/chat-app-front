@@ -1,0 +1,88 @@
+:root {
+  --text-color: rgb(1, 1, 1);
+  --background-color: 	rgb(245, 251, 249);
+  --background-div-color: rgb(230, 244, 241);
+  --primary-color:	rgb(255, 134, 74);
+  --primary-color-light: rgb(255, 207, 183);
+  --primary-color-dark: rgb(132, 44, 0);
+  --secondary-color: 	rgb(71, 129, 127);
+  --secondary-color-light: rgb(175, 211, 210);
+  --secondary-color-dark: rgb(28, 52, 51);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+  
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 16px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+.wrapperApp {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.mainApp {
+  grid-area: main;
+  padding-top: 3.5rem;
+  margin: 0 auto;
+  max-width: 1800px;
+  width: 90%;
+}
+
+h1 {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin: 1.25rem 0;
+}
+
+h2 {
+  font-size: 2.5rem;
+  color: var(--secondary-color);
+  margin: 1rem 0;
+}
+
+h3 {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+  margin: 0.75rem 0;
+}
+
+h4 {
+  font-size: 1.2rem;
+  color: var(--secondary-color);
+  margin: 0.5rem 0;
+}
+
+p {
+  line-height: 1.5;
+  margin: 0.5rem 0;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.contentWrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+}
