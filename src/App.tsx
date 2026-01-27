@@ -1,14 +1,16 @@
+import { Outlet } from 'react-router-dom'
+import Navbar from './components/navbar.tsx'
+import Footer from './components/footer.tsx'
+
 function App() {
 
   return (
     <div className='wrapperApp'>
+      <Navbar />
       <main className='mainApp'>
-        <h1>Chat App</h1>
-        <h2>Header 2</h2>
-        <h3>Header 3</h3>
-        <h4>Header 4</h4>
-        <p>paragraph</p>
+        <Outlet />
       </main>
+      <Footer />
     </div>
   )
 }

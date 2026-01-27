@@ -1,5 +1,6 @@
 import type { RouteObject } from 'react-router-dom'
 import App from './App'
+import Home from './pages/Home'
 import ErrorPage from './pages/ErrorPage.tsx'
 
 const routes: RouteObject[] = [
@@ -7,11 +8,16 @@ const routes: RouteObject[] = [
     path:'/',
     element: <App />,
     errorElement: <ErrorPage />,
-  },
-  {
-    path: '/user/:name',
-    element: <App />,
-    errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true,
+        element: <Home />
+      },
+      // {
+      //   path: 'chats',
+      //   element: <ProtectedRoute><Chats /></ProtectedRoute>
+      // },
+    ]
   },
 ]
 
