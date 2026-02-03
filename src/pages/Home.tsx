@@ -1,4 +1,4 @@
-import SignUp from '../components/SignUp.tsx'
+import Register from '../components/Register.tsx'
 import LogIn from '../components/LogIn.tsx'
 
 
@@ -9,8 +9,8 @@ function Home() {
         <h1>Welcome to Chat App</h1>
       </header>
       <main>
-        <SignUp />
         <LogIn />
+        <Register />
       </main>
     </div>
   )
