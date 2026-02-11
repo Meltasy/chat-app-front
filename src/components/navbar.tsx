@@ -1,33 +1,58 @@
 import { NavLink } from 'react-router-dom'
+import type { User } from '../utils/authenticate.ts'
+import { logout } from '../utils/authenticate.ts'
 import styles from '../assets/components/Navbar.module.css'
 
-function Navbar() {
+interface NavbarProps {
+  user: User | null
+}
+
+function Navbar({ user }: NavbarProps) {
+  const handleLogout = () => {
+    logout()
+  }
+
   return (
     <nav className={styles.wrapper}>
+      {user ? (
+        <span>Welcome, {user.username}!</span>
+       ) : (
+        <span>Please register or log in.</span>
+      )}
       <NavLink
         to='/'
         className={({ isActive }) =>
           isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
         }
       >
-        Home
+        Home / Login / Register
       </NavLink>
-      <NavLink
-        to='/index/register'
-        className={({ isActive }) =>
-          isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
-        }
-      >
-        Register
-      </NavLink>
-      <NavLink
-        to='/index/login'
-        className={({ isActive }) =>
-          isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
-        }
-      >
-        Login
-      </NavLink>
+      {user && (
+        <>
+          <NavLink
+            to='/profile'
+            className={({ isActive }) =>
+              isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
+            }
+          >
+            Profile
+          </NavLink>
+          <NavLink
+            to='/profile'
+            className={({ isActive }) =>
+              isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
+            }
+          >
+            Chats
+          </NavLink>
+          <button
+            onClick={handleLogout}
+            className={styles.linkTitle}
+          >
+            Logout
+          </button>
+        </>
+      )}
     </nav>
   )
 }

@@ -1,4 +1,4 @@
-import { getUserHeader } from './utils/authenticate'
+// import { getUserHeader } from './utils/authenticate'
 
 const API_URL = import.meta.env.BACKEND_URL
 
@@ -34,10 +34,10 @@ const header = (): HeadersInit => ({
   'Content-type': 'application/json'
 })
 
-const userHeader = (): HeadersInit => ({
-  ...header(),
-  ...getUserHeader()
-})
+// const userHeader = (): HeadersInit => ({
+//   ...header(),
+//   ...getUserHeader()
+// })
 
 async function register(
   username: string,
