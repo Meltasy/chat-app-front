@@ -3,6 +3,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom'
 import Register from '../components/Register.tsx'
 import LogIn from '../components/LogIn.tsx'
 import type { User } from '../utils/authenticate.ts'
+import styles from '../assets/pages/Home.module.css'
 
 interface OutletContext {
   user: User | null
@@ -22,9 +23,13 @@ function Home() {
   return(
     <div>
       <header>
-        <h1>Welcome to Chat App</h1>
+        {user ? (
+          <h1>Welcome, {user.username}!</h1>
+        ) : (
+          <h1>Please register or log in.</h1>
+        )}
       </header>
-      <main>
+      <main className={styles.wrapper}>
         <LogIn />
         <Register />
       </main>

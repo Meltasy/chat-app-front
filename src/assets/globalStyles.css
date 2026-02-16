@@ -1,13 +1,10 @@
 :root {
-  --text-color: rgb(1, 1, 1);
-  --background-color: 	rgb(245, 251, 249);
-  --background-div-color: rgb(230, 244, 241);
-  --primary-color:	rgb(255, 134, 74);
-  --primary-color-light: rgb(255, 207, 183);
-  --primary-color-dark: rgb(132, 44, 0);
-  --secondary-color: 	rgb(71, 129, 127);
-  --secondary-color-light: rgb(175, 211, 210);
-  --secondary-color-dark: rgb(28, 52, 51);
+  --text-color: rgb(27, 18, 18);
+  --background-color: 	rgb(255, 244, 236);
+  --primary-color: 	rgb(138, 43, 14);
+  --secondary-color: rgb(185, 132, 115);
+  --tertiary-color:	rgb(210, 180, 140);
+  --error-text-color: 	rgb(138, 43, 14);
 }
 
 * {
@@ -47,6 +44,7 @@ body {
   margin: 0 auto;
   max-width: 1500px;
   width: 90%;
+  text-align: center;
 }
 
 h1 {
@@ -81,6 +79,70 @@ p {
 ul {
   padding: 0;
   list-style-type: none;
+}
+
+form {
+  background-color: var(--primary-color);
+  width: max-content;
+  margin: auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+label {
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  color: var(--tertiary-color);
+  margin-right: 1rem;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  letter-spacing: 0.1rem;
+  line-height: 1.6;
+  color: var(--primary-color);
+  background-color: var(--background-color);
+  border: none;
+  outline: none;
+  padding: 0.6rem 1.2rem;
+  min-width: 400px;
+}
+
+.buttonBox {
+  align-self: center;
+}
+
+.button {
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  color: var(--background-color);
+  background-color: var(--secondary-color);
+  border: none;
+  outline: none;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  &:hover {
+    color: var(--primary-color);
+    background-color: var(--background-color);
+  }
+}
+
+.errorBox {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.errors {
+  color: var(--error-text-color);
+  font-style: italic;
+  margin-top: 0.5rem;
+  max-width: 425px;
 }
 
 @media (max-width: 768px) {

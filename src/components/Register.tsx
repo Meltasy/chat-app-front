@@ -110,10 +110,8 @@ function Register() {
 
   return (
     <>
-      <header>
-        <h1>Register</h1>
-      </header>
       <main>
+        <h2>Register</h2>
         <form onSubmit={handleSubmit}>
           <div className = 'errorBox'>
             {errors.general && <div className='errors'>{errors.general}</div>}

@@ -14,18 +14,13 @@ function Navbar({ user }: NavbarProps) {
 
   return (
     <nav className={styles.wrapper}>
-      {user ? (
-        <span>Welcome, {user.username}!</span>
-       ) : (
-        <span>Please register or log in.</span>
-      )}
       <NavLink
         to='/'
         className={({ isActive }) =>
           isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
         }
       >
-        Home / Login / Register
+        Home
       </NavLink>
       {user && (
         <>

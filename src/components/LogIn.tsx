@@ -88,10 +88,8 @@ function LogIn() {
 
   return (
     <>
-      <header>
-        <h1>Log in</h1>
-      </header>
       <main>
+        <h2>Log in</h2>
         <form onSubmit={handleSubmit}>
           <div className='errorBox'>
             {errors.general && <div className='errors'>{errors.general}</div>}
