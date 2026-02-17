@@ -4,7 +4,7 @@
   --primary-color: 	rgb(138, 43, 14);
   --secondary-color: rgb(185, 132, 115);
   --tertiary-color:	rgb(210, 180, 140);
-  --error-text-color: 	rgb(138, 43, 14);
+  --error-text-color: 	rgb(255, 244, 236);
 }
 
 * {
@@ -28,8 +28,8 @@ body {
 
 .wrapperApp {
   display: grid;
-  grid-template-columns: auto 3fr;
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: minmax(100px, 1fr) 4fr;
+  grid-template-rows: minmax(50px, 1fr) 8fr minmax(50px, 1fr);
   grid-template-areas:
     "menu header"
     "menu main"
@@ -85,10 +85,9 @@ form {
   background-color: var(--primary-color);
   width: max-content;
   margin: auto;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   gap: 1rem;
 }
 
@@ -97,11 +96,10 @@ label {
   font-weight: 700;
   letter-spacing: 0.1rem;
   color: var(--tertiary-color);
-  margin-right: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-input,
-textarea {
+input {
   font-family: inherit;
   letter-spacing: 0.1rem;
   line-height: 1.6;
@@ -111,6 +109,12 @@ textarea {
   outline: none;
   padding: 0.6rem 1.2rem;
   min-width: 400px;
+}
+
+.labelInputBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .buttonBox {
@@ -135,7 +139,7 @@ textarea {
 
 .errorBox {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .errors {

@@ -94,7 +94,7 @@ function LogIn() {
           <div className='errorBox'>
             {errors.general && <div className='errors'>{errors.general}</div>}
           </div>
-          <div>
+          <div className='labelInputBox'>
             <label htmlFor='email'>Email *</label>
             <input
               id='email'
@@ -111,7 +111,7 @@ function LogIn() {
               {errors.email && <div className='errors'>{errors.email}</div>}
             </div>
           </div>
-          <div>
+          <div className='labelInputBox'>
             <label htmlFor='password'>Password *</label>
             <input
               id='password'

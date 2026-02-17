@@ -113,10 +113,10 @@ function Register() {
       <main>
         <h2>Register</h2>
         <form onSubmit={handleSubmit}>
-          <div className = 'errorBox'>
+          <div className='errorBox'>
             {errors.general && <div className='errors'>{errors.general}</div>}
           </div>
-          <div>
+          <div className='labelInputBox'>
             <label htmlFor='username'>Username *</label>
             <input
               id='username'
@@ -130,11 +130,11 @@ function Register() {
               autoFocus
               required
             />
-            <div className = 'errorBox'>
+            <div className='errorBox'>
               {errors.username && <div className='errors'>{errors.username}</div>}
             </div>
           </div>
-          <div>
+          <div className='labelInputBox'>
             <label htmlFor='email'>Email *</label>
             <input
               id='email'
@@ -147,11 +147,11 @@ function Register() {
               onChange={handleChange}
               required
             />
-            <div className = 'errorBox'>
+            <div className='errorBox'>
               {errors.email && <div className='errors'>{errors.email}</div>}
             </div>
           </div>
-          <div>
+          <div className='labelInputBox'>
             <label htmlFor='password'>Password *</label>
             <input
               id='password'
@@ -163,11 +163,11 @@ function Register() {
               onChange={handleChange}
               required
             />
-            <div className = 'errorBox'>
+            <div className='errorBox'>
               {errors.password && <div className='errors'>{errors.password}</div>}
             </div>
           </div>
-          <div>
+          <div className='labelInputBox'>
             <label htmlFor='confirmPassword'>Confirm password *</label>
             <input
               id='confirmPassword'
@@ -178,7 +178,7 @@ function Register() {
               onChange={handleChange}
               required
             />
-            <div className = 'errorBox'>
+            <div className='errorBox'>
               {errors.confirmPassword && <div className='errors'>{errors.confirmPassword}</div>}
             </div>
           </div>
