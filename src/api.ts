@@ -1,6 +1,6 @@
-// import { getUserHeader } from './utils/authenticate'
+import { getUserHeader } from './utils/authenticate'
 
-const API_URL = import.meta.env.BACKEND_URL
+const API_URL = import.meta.env.VITE_BACKEND_URL
 
 interface RegisterResponse {
   success: boolean
@@ -24,6 +24,19 @@ interface LoginResponse {
   }
 }
 
+interface ChatPreview {
+  id: string
+  name: string
+  members: { id: string, username: string, role: string }[]
+  messages: { text: string, sentAt: string, sender: { username: string } }[]
+}
+
+interface ChatsResponse {
+  success: boolean
+  message: string
+  chats?: ChatPreview[]
+}
+
 interface ErrorResponse {
   success: false
   message: string
@@ -34,10 +47,10 @@ const header = (): HeadersInit => ({
   'Content-type': 'application/json'
 })
 
-// const userHeader = (): HeadersInit => ({
-//   ...header(),
-//   ...getUserHeader()
-// })
+const userHeader = (): HeadersInit => ({
+  ...header(),
+  ...getUserHeader()
+})
 
 async function register(
   username: string,
@@ -74,13 +87,29 @@ async function login(
   return response.json()
 }
 
+async function getChats(userId: string): Promise<ChatsResponse> {
+  const response = await fetch(`${API_URL}/user/${userId}/chats`, {
+    mode: 'cors',
+    method: 'GET',
+    headers: userHeader()
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to fetch chats: ${response.status}`)
+  }
+  return response.json()
+}
+
 export type {
   RegisterResponse,
   LoginResponse,
+  ChatPreview,
+  ChatsResponse,
   ErrorResponse
 }
 
 export {
   register,
-  login
+  login,
+  getChats
 }

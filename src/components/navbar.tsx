@@ -1,27 +1,25 @@
 import { NavLink } from 'react-router-dom'
 import type { User } from '../utils/authenticate.ts'
-import { logout } from '../utils/authenticate.ts'
 import styles from '../assets/components/Navbar.module.css'
 
 interface NavbarProps {
   user: User | null
+  onLogout: () => void
 }
 
-function Navbar({ user }: NavbarProps) {
-  const handleLogout = () => {
-    logout()
-  }
-
+function Navbar({ user, onLogout }: NavbarProps) {
   return (
     <nav className={styles.wrapper}>
-      <NavLink
-        to='/'
-        className={({ isActive }) =>
-          isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
-        }
-      >
-        Home
-      </NavLink>
+      {!user && (
+        <NavLink
+          to='/'
+          className={({ isActive }) =>
+            isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
+          }
+        >
+          Home
+        </NavLink>
+      )}
       {user && (
         <>
           <NavLink
@@ -33,7 +31,7 @@ function Navbar({ user }: NavbarProps) {
             Profile
           </NavLink>
           <NavLink
-            to='/profile'
+            to='/chats'
             className={({ isActive }) =>
               isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
             }
@@ -41,7 +39,7 @@ function Navbar({ user }: NavbarProps) {
             Chats
           </NavLink>
           <button
-            onClick={handleLogout}
+            onClick={onLogout}
             className={styles.linkTitle}
           >
             Logout

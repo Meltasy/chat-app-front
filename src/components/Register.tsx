@@ -29,7 +29,7 @@ function Register() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setForm({ ...form, [name]: value })
+    setForm(prev => ({ ...prev, [name]: value }))
     const newErrors = { ...errors }
     if (name === 'username' && newErrors.username) {
       delete newErrors.username
@@ -52,21 +52,26 @@ function Register() {
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
+    const usernameRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    const passowrdRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,24}$/
     if (!form.username.trim()) {
       newErrors.username = 'Username is required.'
     } else if (form.username.length < 6 || form.username.length > 100) {
       newErrors.username = 'Username must be between 6 and 100 characters.'
+    } else if (!usernameRegex.test(form.username.trim())) {
+      newErrors.username = 'Username must contain only letters with single spaces between words.'
     }
     if (!form.email.trim()) {
       newErrors.email = 'Email is required.'
     } else if (form.email.length > 100) {
       newErrors.email = 'Email must not exceed 100 characters.'
-    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email)) {
+    } else if (!emailRegex.test(form.email)) {
       newErrors.email = 'Please enter a valid email address.'
     }
     if (!form.password) {
       newErrors.password = 'Password is required.'
-    } else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,24}$/.test(form.password)) {
+    } else if (!passowrdRegex.test(form.password)) {
       newErrors.password = 'Password must contain one number, one lowercase letter, one uppercase letter, one special character, no spaces, and be between 8 and 24 characters.'
     }
     if (!form.confirmPassword) {
@@ -135,9 +140,9 @@ function Register() {
             </div>
           </div>
           <div className='labelInputBox'>
-            <label htmlFor='email'>Email *</label>
+            <label htmlFor='register-email'>Email *</label>
             <input
-              id='email'
+              id='register-email'
               name='email'
               placeholder='donald.duck@example.com'
               type='email'
@@ -152,9 +157,9 @@ function Register() {
             </div>
           </div>
           <div className='labelInputBox'>
-            <label htmlFor='password'>Password *</label>
+            <label htmlFor='register-password'>Password *</label>
             <input
-              id='password'
+              id='register-password'
               name='password'
               type='password'
               autoComplete='new-password'
@@ -168,9 +173,9 @@ function Register() {
             </div>
           </div>
           <div className='labelInputBox'>
-            <label htmlFor='confirmPassword'>Confirm password *</label>
+            <label htmlFor='register-confirmPassword'>Confirm password *</label>
             <input
-              id='confirmPassword'
+              id='register-confirmPassword'
               name='confirmPassword'
               type='password'
               autoComplete='new-password'

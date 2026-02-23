@@ -1,6 +1,9 @@
 import type { RouteObject } from 'react-router-dom'
 import App from './App.tsx'
 import Home from './pages/Home.tsx'
+import Profile from './pages/Profile.tsx'
+import Chats from './pages/Chats.tsx'
+import ProtectedRoute from './components/ProtectedRoute.tsx'
 import ErrorPage from './pages/ErrorPage.tsx'
 
 const routes: RouteObject[] = [
@@ -13,10 +16,14 @@ const routes: RouteObject[] = [
         index: true,
         element: <Home />
       },
-      // {
-      //   path: 'chats',
-      //   element: <ProtectedRoute><Chats /></ProtectedRoute>
-      // },
+      {
+        path: 'profile',
+        element: <ProtectedRoute><Profile /></ProtectedRoute>
+      },
+      {
+        path: 'chats',
+        element: <ProtectedRoute><Chats /></ProtectedRoute>
+      },
     ]
   },
 ]

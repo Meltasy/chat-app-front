@@ -23,9 +23,10 @@ function LogIn() {
 
   const validateForm = (): FormErrors => {
     const newErrors: FormErrors = {}
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     if (!email.trim()) {
       newErrors.email = 'Email is required.'
-    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+    } else if (!emailRegex.test(email)) {
       newErrors.email = 'Please enter a valid email address.'
     }
     if (!password.trim()) {
@@ -95,9 +96,9 @@ function LogIn() {
             {errors.general && <div className='errors'>{errors.general}</div>}
           </div>
           <div className='labelInputBox'>
-            <label htmlFor='email'>Email *</label>
+            <label htmlFor='login-email'>Email *</label>
             <input
-              id='email'
+              id='login-email'
               name='email'
               placeholder='donald.duck@example.com'
               type='email'
@@ -112,9 +113,9 @@ function LogIn() {
             </div>
           </div>
           <div className='labelInputBox'>
-            <label htmlFor='password'>Password *</label>
+            <label htmlFor='login-password'>Password *</label>
             <input
-              id='password'
+              id='login-password'
               name='password'
               type='password'
               autoComplete='current-password'

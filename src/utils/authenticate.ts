@@ -65,15 +65,9 @@ const getUserHeader = (): { Authorization?: string } => {
   return token ? { Authorization: `Bearer ${token}` }: {}
 }
 
-const logout = (): void => {
-  localStorage.removeItem('token')
-  window.location.href = '/'
-}
-
 export type { JWTPayload, User }
 
 export {
   getCurrentUser,
-  getUserHeader,
-  logout
+  getUserHeader
 }

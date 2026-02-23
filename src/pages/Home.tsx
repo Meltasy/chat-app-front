@@ -5,13 +5,8 @@ import LogIn from '../components/LogIn.tsx'
 import type { User } from '../utils/authenticate.ts'
 import styles from '../assets/pages/Home.module.css'
 
-interface OutletContext {
-  user: User | null
-  onUserUpdate: (user: User | null) => void
-}
-
 function Home() {
-  const { user } = useOutletContext<OutletContext>()
+  const { user } = useOutletContext<{ user: User | null }>()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -23,11 +18,7 @@ function Home() {
   return(
     <div>
       <header>
-        {user ? (
-          <h1>Welcome, {user.username}!</h1>
-        ) : (
-          <h1>Please register or log in.</h1>
-        )}
+        <h1>Please register or log in.</h1>
       </header>
       <main className={styles.wrapper}>
         <LogIn />
