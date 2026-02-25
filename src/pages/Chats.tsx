@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
-import { useOutletContext, useNavigate } from 'react-router-dom'
-import type { User } from '../utils/authenticate.ts'
+import { Outlet, useOutletContext, NavLink } from 'react-router-dom'
 import { getChats, type ChatPreview } from '../api.ts'
+import type { User } from '../utils/authenticate.ts'
+import styles from '../assets/pages/Chats.module.css'
 
 function Chats() {
   const { user } = useOutletContext<{ user: User | null }>()
   const [chats, setChats] = useState<ChatPreview[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (!user) return
@@ -30,25 +30,51 @@ function Chats() {
   }, [user])
 
   if (!user) return null
-  if (loading) return <p>Loading chats...</p>
-  if (error) return <p>{error}</p>
 
   return (
-    <div>
-      <h1>Your chats, {user.username}!</h1>
-      <button onClick={() => navigate('/chats/new')}>Create Chat</button>
-      {chats.length === 0 ? (
-        <p>You have no chats yet.</p>
-      ) : (
+    <div className={styles.wrapper}>
+      <aside className={styles.sidebar}>
+        <h4>Your chats, {user.username}!</h4>
         <ul>
-          {chats.map(chat => (
-            <li key={chat.id} onClick={() => navigate(`/chats/${chat.id}`)}>
-              <strong>{chat.name}</strong>
-              <p>{chat.messages[0]?.text ?? 'No messages yet.'}</p>
-            </li>
-          ))}
+          <li>
+            <NavLink
+              to='/chats/new'
+              className={({ isActive }) =>
+                isActive ? `${styles.button} ${styles.active}` : styles.button
+              }
+            >
+              Create Chat
+            </NavLink>
+          </li>
         </ul>
-      )}
+
+        {loading && <p>Loading chats...</p>}
+        {error && <p>{error}</p>}
+        {!loading && !error && (
+          chats.length === 0 ? (
+            <p>You have no chats yet.</p>
+          ) : (
+            <ul>
+              {chats.map(chat => (
+                <li key={chat.id}>
+                  <NavLink
+                    to={`/chats/${chat.id}`}
+                    className={({ isActive }) =>
+                      isActive ? `${styles.chatItem} ${styles.active}` : styles.chatItem
+                    }
+                  >
+                    <strong>{chat.name}</strong>
+                    <p>{chat.messages[0]?.text ?? 'No messages yet.'}</p>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          )
+        )}
+      </aside>
+      <main>
+        <Outlet />
+      </main>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import Navbar from './components/navbar.tsx'
-import Footer from './components/footer.tsx'
+import Navbar from './components/Navbar.tsx'
+import Footer from './components/Footer.tsx'
 import { getCurrentUser, type User } from './utils/authenticate.ts'
 
 function App() {

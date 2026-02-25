@@ -1,0 +1,40 @@
+.wrapper {
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.chatItem {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.button {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background-color: var(--secondary-color);
+  padding: 0.5rem 1rem;
+  justify-self: center;
+}
+
+.button:hover {
+  opacity: 0.75;
+}
+
+.active {
+  background-color: var(--tertiary-color);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+    gap: 0.5rem
+  }
+}
