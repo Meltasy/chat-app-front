@@ -37,6 +37,22 @@ interface ChatsResponse {
   chats?: ChatPreview[]
 }
 
+interface UsersResponse {
+  success: boolean
+  message: string
+  users?: { id: string, username: string }[]
+}
+
+interface CreateChatResponse {
+  success: boolean
+  message: string
+  chat?: {
+    id: string
+    name: string | null
+    isGroup: boolean
+  }
+}
+
 interface ErrorResponse {
   success: false
   message: string
@@ -100,6 +116,32 @@ async function getChats(userId: string): Promise<ChatsResponse> {
   return response.json()
 }
 
+async function getAllUsers(): Promise<UsersResponse> {
+  const response = await fetch(`${API_URL}/user`, {
+    method: 'GET',
+    headers: userHeader()
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to fetch users: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function createChat(members: string[]): Promise<CreateChatResponse> {
+  const response = await fetch(`${API_URL}/chats/new`, {
+    mode: 'cors',
+    method: 'POST',
+    headers: userHeader(),
+    body: JSON.stringify({ members })
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to create chat: ${response.status}`)
+  }
+  return response.json()
+}
+
 export type {
   RegisterResponse,
   LoginResponse,
@@ -111,5 +153,7 @@ export type {
 export {
   register,
   login,
-  getChats
+  getChats,
+  getAllUsers,
+  createChat
 }

@@ -28,19 +28,19 @@ body {
 
 .wrapperApp {
   display: grid;
-  grid-template-columns: minmax(100px, 1fr) 4fr;
-  grid-template-rows: minmax(50px, 1fr) 8fr minmax(50px, 1fr);
+  grid-template-columns: auto;
+  grid-template-rows: auto auto 1fr auto;
   grid-template-areas:
-    "menu header"
-    "menu main"
-    "menu footer";
+    "menu"
+    "header"
+    "main"
+    "footer";
   min-height: 100vh;
   min-height: 100dvh;
 }
 
 .mainApp {
   grid-area: main;
-  padding-top: 3.5rem;
   margin: 0 auto;
   max-width: 1500px;
   width: 90%;
@@ -150,18 +150,7 @@ input {
 }
 
 @media (max-width: 768px) {
-  .wrapperApp {
-    grid-template-columns: auto;
-    grid-template-rows: auto auto 1fr auto;
-    grid-template-areas:
-      "menu"
-      "header"
-      "main"
-      "footer";
-  }
-
   .mainApp {
-    padding-top: 6rem;
     max-width: 95%;
   }
 }

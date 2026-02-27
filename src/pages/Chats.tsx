@@ -7,9 +7,9 @@ import styles from '../assets/pages/Chats.module.css'
 function Chats() {
   const { user } = useOutletContext<{ user: User | null }>()
   const [chats, setChats] = useState<ChatPreview[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
+  const [loading, setLoading] = useState(true)
+  
   useEffect(() => {
     if (!user) return
     const fetchChats = async () => {
@@ -47,7 +47,6 @@ function Chats() {
             </NavLink>
           </li>
         </ul>
-
         {loading && <p>Loading chats...</p>}
         {error && <p>{error}</p>}
         {!loading && !error && (

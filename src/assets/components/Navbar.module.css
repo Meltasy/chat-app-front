@@ -2,14 +2,11 @@
   grid-area: menu;
   background-color: var(--tertiary-color);
   width: 100%;
-  max-width: 300px;
-  height: 100%;
   padding: 1rem;
   position: sticky;
   top: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   gap: 1rem;
   z-index: 100;
@@ -23,7 +20,7 @@
   color: var(--primary-color);
   background-color: transparent;
   border: none;
-  padding: 1rem 0.5rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
   transition: color 0.2s ease;
 }
@@ -38,9 +35,7 @@
 
 @media (max-width: 768px) {
   .wrapper {
-    /* Do we need both of these? */
     height: auto;
-    min-height: 6rem;
     padding: 0.5rem;
     flex-direction: row;
     gap: 0.5rem;
@@ -49,6 +44,6 @@
 
   .linkTitle {
     font-size: 1.2rem;
-    padding: 0.7rem 0.3rem;
+    padding: 0.3rem 0.6rem;
   }
 }

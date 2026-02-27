@@ -1,9 +1,14 @@
 .wrapper {
-  display: flex;
-  height: 100%;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "sidebar" "main";
+  min-height: 100vh;
+  min-height: 100dvh;
+  justify-items: start;
+  align-items: start;
+  gap: 2rem;
+  padding: 1rem;
 }
 
 .chatItem {
