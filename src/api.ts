@@ -28,7 +28,7 @@ interface ChatPreview {
   id: string
   name: string
   members: { id: string, username: string, role: string }[]
-  messages: { text: string, sentAt: string, sender: { username: string } }[]
+  lastMessage: { text: string, sentAt: string, sender: { username: string } } | null
 }
 
 interface ChatsResponse {
@@ -51,6 +51,11 @@ interface CreateChatResponse {
     name: string | null
     isGroup: boolean
   }
+}
+
+interface RenameChatResponse {
+  success: boolean
+  message: string
 }
 
 interface ErrorResponse {
@@ -103,8 +108,8 @@ async function login(
   return response.json()
 }
 
-async function getChats(userId: string): Promise<ChatsResponse> {
-  const response = await fetch(`${API_URL}/user/${userId}/chats`, {
+async function getChats(): Promise<ChatsResponse> {
+  const response = await fetch(`${API_URL}/chats/`, {
     mode: 'cors',
     method: 'GET',
     headers: userHeader()
@@ -117,7 +122,7 @@ async function getChats(userId: string): Promise<ChatsResponse> {
 }
 
 async function getAllUsers(): Promise<UsersResponse> {
-  const response = await fetch(`${API_URL}/user`, {
+  const response = await fetch(`${API_URL}/user/allUsers`, {
     method: 'GET',
     headers: userHeader()
   })
@@ -128,16 +133,57 @@ async function getAllUsers(): Promise<UsersResponse> {
   return response.json()
 }
 
-async function createChat(members: string[]): Promise<CreateChatResponse> {
-  const response = await fetch(`${API_URL}/chats/new`, {
+async function createChat(members: string[], name?: string): Promise<CreateChatResponse> {
+  const response = await fetch(`${API_URL}/chats/newChat`, {
     mode: 'cors',
     method: 'POST',
     headers: userHeader(),
-    body: JSON.stringify({ members })
+    body: JSON.stringify({ members, ...(name && { name }) })
   })
   if (!response.ok) {
     const errorData: ErrorResponse = await response.json()
     throw new Error(errorData.message || `Failed to create chat: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function renameChat(chatId: string, name: string): Promise<RenameChatResponse> {
+  const response = await fetch(`${API_URL}/chats/${chatId}/name`, {
+    mode: 'cors',
+    method: 'PATCH',
+    headers: userHeader(),
+    body: JSON.stringify({ name })
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to rename chat: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function getChatMessages(chatId: string) {
+  const response = await fetch(`${API_URL}/chats/${chatId}/messages`, {
+    mode: 'cors',
+    method: 'GET',
+    headers: userHeader()
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to fetch messages: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function sendChatMessage(chatId: string, text: string) {
+  const response = await fetch(`${API_URL}/chats/${chatId}/newMessage`, {
+    mode: 'cors',
+    method: 'POST',
+    headers: userHeader(),
+    body: JSON.stringify({ text })
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to send message: ${response.status}`)
   }
   return response.json()
 }
@@ -147,6 +193,9 @@ export type {
   LoginResponse,
   ChatPreview,
   ChatsResponse,
+  UsersResponse,
+  CreateChatResponse,
+  RenameChatResponse,
   ErrorResponse
 }
 
@@ -155,5 +204,8 @@ export {
   login,
   getChats,
   getAllUsers,
-  createChat
+  createChat,
+  renameChat,
+  getChatMessages,
+  sendChatMessage
 }

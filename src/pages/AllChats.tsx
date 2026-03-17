@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import { Outlet, useOutletContext, NavLink } from 'react-router-dom'
 import { getChats, type ChatPreview } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
-import styles from '../assets/pages/Chats.module.css'
+import styles from '../assets/pages/AllChats.module.css'
 
-function Chats() {
+function AllChats() {
   const { user } = useOutletContext<{ user: User | null }>()
   const [chats, setChats] = useState<ChatPreview[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -14,7 +14,7 @@ function Chats() {
     if (!user) return
     const fetchChats = async () => {
       try {
-        const data = await getChats(user.id)
+        const data = await getChats()
         if (data.success && data.chats) {
           setChats(data.chats)
         } else {
@@ -63,7 +63,7 @@ function Chats() {
                     }
                   >
                     <strong>{chat.name}</strong>
-                    <p>{chat.messages[0]?.text ?? 'No messages yet.'}</p>
+                    <p>{chat.lastMessage?.text ?? 'No messages yet.'}</p>
                   </NavLink>
                 </li>
               ))}
@@ -72,10 +72,10 @@ function Chats() {
         )}
       </aside>
       <main>
-        <Outlet />
+        <Outlet context={{ user }} />
       </main>
     </div>
   )
 }
 
-export default Chats
+export default AllChats

@@ -2,7 +2,8 @@ import type { RouteObject } from 'react-router-dom'
 import App from './App.tsx'
 import Home from './pages/Home.tsx'
 import Profile from './pages/Profile.tsx'
-import Chats from './pages/Chats.tsx'
+import AllChats from './pages/AllChats.tsx'
+import Chat from './components/Chat.tsx'
 import NewChat from './components/NewChat.tsx'
 import ProtectedRoute from './components/ProtectedRoute.tsx'
 import ErrorPage from './pages/ErrorPage.tsx'
@@ -23,7 +24,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'chats',
-        element: <ProtectedRoute><Chats /></ProtectedRoute>,
+        element: <ProtectedRoute><AllChats /></ProtectedRoute>,
         children: [
           {
             index: true,
@@ -33,10 +34,10 @@ const routes: RouteObject[] = [
             path: 'new',
             element: <NewChat />
           },
-          // {
-          //   path: ':chatId',
-          //   element: <Chat />
-          // }
+          {
+            path: ':chatId',
+            element: <Chat />
+          }
         ]
       },
     ]

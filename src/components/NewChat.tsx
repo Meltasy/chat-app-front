@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { getAllUsers, createChat } from '../api.ts'
+import type { User } from '../utils/authenticate.ts'
 
 function NewChat() {
-  const { user } = useOutletContext<{ user: { id: string } | null }>()
+  const { user } = useOutletContext<{ user: User | null }>()
   const [allUsers, setAllUsers] = useState<{ id: string, username: string }[]>([])
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
+  const [groupName, setGroupName] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [usersLoading, setUsersLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const navigate = useNavigate()
 
+  // Should I move this to a Custom Hook?
   useEffect(() => {
     if (!user) return
     const userId = user.id
@@ -40,7 +43,7 @@ function NewChat() {
     setCreating(true)
     setError(null)
     try {
-      const result = await createChat(selectedUsers)
+      const result = await createChat(selectedUsers, selectedUsers.length > 1 ? groupName : undefined)
       if (result.success && result.chat) {
         navigate(`/chats/${result.chat.id}`)
       } else {
@@ -62,17 +65,32 @@ function NewChat() {
   return(
     <div>
       <h1>New Chat</h1>
-      <p>Choose friends:</p>
-      {allUsers.map(u => (
-        <label key={u.id}>
+      <div>
+        <p>Choose friends:</p>
+        {allUsers.map(u => (
+          <label key={u.id}>
+            <input
+              type='checkbox'
+              checked={selectedUsers.includes(u.id)}
+              onChange={() => toggleUser(u.id)}
+            />
+            {u.username}
+          </label>
+        ))}
+      </div>
+      <div>
+        <label>
+          Group name (optional):
           <input
-            type='checkbox'
-            checked={selectedUsers.includes(u.id)}
-            onChange={() => toggleUser(u.id)}
+            type='text'
+            value={groupName}
+            onChange={e => setGroupName(e.target.value)}
+            placeholder='New Group'
+            minLength={5}
+            maxLength={100}
           />
-          {u.username}
         </label>
-      ))}
+      </div>
       <button
         disabled={selectedUsers.length === 0}
         onClick={handleCreate}
