@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+// import { useRef } from 'react'
 import { useParams, useOutletContext } from 'react-router-dom'
 import { getChatMessages, sendChatMessage, renameChat } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
+import styles from '../assets/components/Chat.module.css'
 
 function Chat() {
   const { chatId } = useParams<{ chatId: string }>()
@@ -17,7 +19,7 @@ function Chat() {
   const [chatLoading, setChatLoading] = useState(true)
 
   const isAdmin = members.find(m => m.id === user?.id)?.role === 'ADMIN'
-  const bottomRef = useRef<HTMLDivElement>(null)
+  // const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!chatId || !user) return
@@ -41,9 +43,9 @@ function Chat() {
     fetchChat()
   }, [chatId, user])
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  // useEffect(() => {
+  //   bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  // }, [messages])
 
   const handleSend = async () => {
     const trimmedMessage = newMessage.trim()
@@ -78,9 +80,9 @@ function Chat() {
   if (error) return <p>{error}</p>
 
   return (
-    <div>
-      <div>
-        <h2>{chatName}</h2>
+    <div className={styles.wrapper}>
+      <div className={`${styles.wrapperDiv} ${styles.buttonDiv}`}>
+        <h4 className={styles.groupName}>{chatName}</h4>
         {isGroup && isAdmin && (
           renaming ? (
             <div>
@@ -91,30 +93,52 @@ function Chat() {
                 minLength={5}
                 maxLength={100}
               />
-              <button onClick={handleRename} disabled={!newName.trim()}>Save</button>
-              <button onClick={() => setRenaming(false)}>Cancel</button>
+              <button
+                onClick={handleRename}
+                disabled={!newName.trim()}
+                className={styles.button}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setRenaming(false)}
+                className={styles.button}
+              >
+                Cancel
+              </button>
             </div>
           ) : (
-            <button onClick={() => setRenaming(true)}>Rename</button>
+            <button
+              onClick={() => setRenaming(true)}
+              className={styles.button}
+            >
+              Rename
+            </button>
           )
         )}
       </div>
-      <ul>
+      <ul className={styles.wrapperDiv}>
         {messages.map((msg, index) => (
-          <li key={index}>
+          <li key={index} className={styles.messageItem}>
             <strong>{msg.sender.username}</strong>: {msg.text}
           </li>
         ))}
       </ul>
-      <div ref={bottomRef} />
-      <div>
+      {/* <div ref={bottomRef} /> */}
+      <div className={`${styles.wrapperDiv} ${styles.buttonDiv}`}>
         <input
           value={newMessage}
           onChange={e => setNewMessage(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
           placeholder='Type a message...'
         />
-        <button onClick={handleSend} disabled={!newMessage.trim()}>Send</button>
+        <button
+          onClick={handleSend}
+          disabled={!newMessage.trim()}
+          className={styles.button}
+        >
+          Send
+        </button>
       </div>
     </div>
   )

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { getAllUsers, createChat } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
+import styles from '../assets/components/NewChat.module.css'
 
 function NewChat() {
   const { user } = useOutletContext<{ user: User | null }>()
@@ -63,24 +64,21 @@ function NewChat() {
   if (!user) return <p>Loading user...</p>
 
   return(
-    <div>
-      <h1>New Chat</h1>
-      <div>
-        <p>Choose friends:</p>
+    <div className={styles.wrapper}>
+      <div className={styles.wrapperDiv}>
+        <h4>Choose friends:</h4>
         {allUsers.map(u => (
-          <label key={u.id}>
-            <input
-              type='checkbox'
-              checked={selectedUsers.includes(u.id)}
-              onChange={() => toggleUser(u.id)}
-            />
+          <div
+            key={u.id}
+            onClick={() => toggleUser(u.id)}
+            className={`${styles.userItem} ${selectedUsers.includes(u.id) ? styles.selected : ''}`}
+          >
             {u.username}
-          </label>
+          </div>
         ))}
       </div>
-      <div>
-        <label>
-          Group name (optional):
+      <div className={styles.wrapperDiv}>
+        <h4>Group name (optional):</h4>
           <input
             type='text'
             value={groupName}
@@ -88,12 +86,13 @@ function NewChat() {
             placeholder='New Group'
             minLength={5}
             maxLength={100}
+            className={styles.inputName}
           />
-        </label>
       </div>
       <button
         disabled={selectedUsers.length === 0}
         onClick={handleCreate}
+        className={styles.button}
       >
         Create Chat
       </button>

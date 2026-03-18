@@ -33,20 +33,16 @@ function AllChats() {
 
   return (
     <div className={styles.wrapper}>
-      <aside className={styles.sidebar}>
+      <aside className={styles.aside}>
         <h4>Your chats, {user.username}!</h4>
-        <ul>
-          <li>
-            <NavLink
-              to='/chats/new'
-              className={({ isActive }) =>
-                isActive ? `${styles.button} ${styles.active}` : styles.button
-              }
-            >
-              Create Chat
-            </NavLink>
-          </li>
-        </ul>
+        <NavLink
+          to='/chats/new'
+          className={({ isActive }) =>
+            isActive ? `${styles.button} ${styles.activeBtn}` : styles.button
+          }
+        >
+          Create Chat
+        </NavLink>
         {loading && <p>Loading chats...</p>}
         {error && <p>{error}</p>}
         {!loading && !error && (
@@ -59,7 +55,7 @@ function AllChats() {
                   <NavLink
                     to={`/chats/${chat.id}`}
                     className={({ isActive }) =>
-                      isActive ? `${styles.chatItem} ${styles.active}` : styles.chatItem
+                      isActive ? `${styles.chatItem} ${styles.activeChat}` : styles.chatItem
                     }
                   >
                     <strong>{chat.name}</strong>
@@ -71,7 +67,7 @@ function AllChats() {
           )
         )}
       </aside>
-      <main>
+      <main className={styles.main}>
         <Outlet context={{ user }} />
       </main>
     </div>
