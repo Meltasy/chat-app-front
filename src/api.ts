@@ -2,18 +2,7 @@ import { getUserHeader } from './utils/authenticate'
 
 const API_URL = import.meta.env.VITE_BACKEND_URL
 
-interface RegisterResponse {
-  success: boolean
-  message: string
-  token?: string
-  user?: {
-    userId: string
-    username: string
-    email: string
-  }
-}
-
-interface LoginResponse {
+interface UserResponse {
   success: boolean
   message: string
   token?: string
@@ -31,13 +20,13 @@ interface ChatPreview {
   lastMessage: { text: string, sentAt: string, sender: { username: string } } | null
 }
 
-interface ChatsResponse {
+interface AllChatsResponse {
   success: boolean
   message: string
   chats?: ChatPreview[]
 }
 
-interface UsersResponse {
+interface AllUsersResponse {
   success: boolean
   message: string
   users?: { id: string, username: string }[]
@@ -53,9 +42,37 @@ interface CreateChatResponse {
   }
 }
 
-interface RenameChatResponse {
+interface ChatResponse {
   success: boolean
   message: string
+}
+
+interface GetMessageResponse {
+  success: boolean
+  message: string
+  chat?: {
+    id: string
+    name: string | null
+    isGroup: boolean
+    members: { id: string, username: string, role: string }[]
+    messages: {
+      id: string
+      text: string
+      sentAt: string
+      sender: { username: string }
+    }[]
+  }
+}
+
+interface MessageResponse {
+  success: boolean
+  message: string
+  data?: {
+    id: string
+    text: string
+    sentAt: string
+    sender: { username: string }
+  }
 }
 
 interface ErrorResponse {
@@ -73,11 +90,7 @@ const userHeader = (): HeadersInit => ({
   ...getUserHeader()
 })
 
-async function register(
-  username: string,
-  email: string,
-  password: string
-): Promise<RegisterResponse> {
+async function register(username: string, email: string, password: string): Promise<UserResponse> {
   const response = await fetch(`${API_URL}/index/register`, {
     mode: 'cors',
     method: 'POST',
@@ -91,10 +104,7 @@ async function register(
   return response.json()
 }
 
-async function login(
-  email: string,
-  password: string
-): Promise<LoginResponse> {
+async function login(email: string, password: string): Promise<UserResponse> {
   const response = await fetch(`${API_URL}/index/login`, {
     mode: 'cors',
     method: 'POST',
@@ -108,7 +118,7 @@ async function login(
   return response.json()
 }
 
-async function getChats(): Promise<ChatsResponse> {
+async function getAllChats(): Promise<AllChatsResponse> {
   const response = await fetch(`${API_URL}/chats/`, {
     mode: 'cors',
     method: 'GET',
@@ -121,7 +131,7 @@ async function getChats(): Promise<ChatsResponse> {
   return response.json()
 }
 
-async function getAllUsers(): Promise<UsersResponse> {
+async function getAllUsers(): Promise<AllUsersResponse> {
   const response = await fetch(`${API_URL}/user/allUsers`, {
     method: 'GET',
     headers: userHeader()
@@ -147,7 +157,7 @@ async function createChat(members: string[], name?: string): Promise<CreateChatR
   return response.json()
 }
 
-async function renameChat(chatId: string, name: string): Promise<RenameChatResponse> {
+async function renameChat(chatId: string, name: string): Promise<ChatResponse> {
   const response = await fetch(`${API_URL}/chats/${chatId}/name`, {
     mode: 'cors',
     method: 'PATCH',
@@ -161,7 +171,47 @@ async function renameChat(chatId: string, name: string): Promise<RenameChatRespo
   return response.json()
 }
 
-async function getChatMessages(chatId: string) {
+async function deleteChat(chatId: string): Promise<ChatResponse> {
+  const response = await fetch(`${API_URL}/chats/${chatId}`, {
+    mode: 'cors',
+    method: 'DELETE',
+    headers: userHeader(),
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to delete chat: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function addMember(chatId: string, userId: string): Promise<ChatResponse> {
+  const response = await fetch(`${API_URL}/chats/${chatId}/members`, {
+    mode: 'cors',
+    method: 'POST',
+    headers: userHeader(),
+    body: JSON.stringify({ userId })
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to add member: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function removeMember(chatId: string, userId: string): Promise<ChatResponse> {
+  const response = await fetch(`${API_URL}/chats/${chatId}/members/${userId}`, {
+    mode: 'cors',
+    method: 'DELETE',
+    headers: userHeader(),
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to remove member: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function getMessages(chatId: string): Promise<GetMessageResponse> {
   const response = await fetch(`${API_URL}/chats/${chatId}/messages`, {
     mode: 'cors',
     method: 'GET',
@@ -174,8 +224,8 @@ async function getChatMessages(chatId: string) {
   return response.json()
 }
 
-async function sendChatMessage(chatId: string, text: string) {
-  const response = await fetch(`${API_URL}/chats/${chatId}/newMessage`, {
+async function sendMessage(chatId: string, text: string): Promise<MessageResponse> {
+  const response = await fetch(`${API_URL}/chats/${chatId}/messages`, {
     mode: 'cors',
     method: 'POST',
     headers: userHeader(),
@@ -188,24 +238,57 @@ async function sendChatMessage(chatId: string, text: string) {
   return response.json()
 }
 
+async function updateMessage(chatId: string, messageId: string, text: string): Promise<MessageResponse> {
+  const response = await fetch(`${API_URL}/chats/${chatId}/messages/${messageId}`, {
+    mode: 'cors',
+    method: 'PATCH',
+    headers: userHeader(),
+    body: JSON.stringify({ text })
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to update message: ${response.status}`)
+  }
+  return response.json()
+}
+
+async function deleteMessage(chatId: string, messageId: string): Promise<ChatResponse> {
+  const response = await fetch(`${API_URL}/chats/${chatId}/messages/${messageId}`, {
+    mode: 'cors',
+    method: 'DELETE',
+    headers: userHeader(),
+  })
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Failed to delete message: ${response.status}`)
+  }
+  return response.json()
+}
+
 export type {
-  RegisterResponse,
-  LoginResponse,
+  UserResponse,
   ChatPreview,
-  ChatsResponse,
-  UsersResponse,
+  AllChatsResponse,
+  AllUsersResponse,
   CreateChatResponse,
-  RenameChatResponse,
+  ChatResponse,
+  GetMessageResponse,
+  MessageResponse,
   ErrorResponse
 }
 
 export {
   register,
   login,
-  getChats,
+  getAllChats,
   getAllUsers,
   createChat,
   renameChat,
-  getChatMessages,
-  sendChatMessage
+  addMember,
+  removeMember,
+  deleteChat,
+  getMessages,
+  sendMessage,
+  updateMessage,
+  deleteMessage
 }

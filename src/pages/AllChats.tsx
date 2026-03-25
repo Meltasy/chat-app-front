@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Outlet, useOutletContext, NavLink } from 'react-router-dom'
-import { getChats, type ChatPreview } from '../api.ts'
+import { getAllChats, type ChatPreview } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
 import styles from '../assets/pages/AllChats.module.css'
 
@@ -14,7 +14,7 @@ function AllChats() {
     if (!user) return
     const fetchChats = async () => {
       try {
-        const data = await getChats()
+        const data = await getAllChats()
         if (data.success && data.chats) {
           setChats(data.chats)
         } else {

@@ -38,3 +38,13 @@
 .button:hover {
   opacity: 0.75;
 }
+
+.errorBanner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: var(--error-text-color);
+  padding: 0.5rem 1rem;
+  width: 100%;
+}
