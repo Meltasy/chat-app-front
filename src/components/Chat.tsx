@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-// import { useRef } from 'react'
 import { useParams, useOutletContext } from 'react-router-dom'
 import { getMessages, sendMessage, renameChat } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
+import ChatHeader from './ChatHeader.tsx'
+import MessageList from './MessageList.tsx'
+import MessageInput from './MessageInput.tsx'
 import styles from '../assets/components/Chat.module.css'
 
 // Add options to (ADMIN only) deleteChat, addMemeber, removeMember, (MEMBER's own only) editMessage, deleteMessage
@@ -25,7 +27,8 @@ function Chat() {
   const [chatLoading, setChatLoading] = useState(true)
 
   const isAdmin = members?.find(m => m.id === user?.id)?.role === 'ADMIN'
-  // const bottomRef = useRef<HTMLDivElement>(null)
+
+  // Should I move the useEffect into a CustomHook?
 
   useEffect(() => {
     if (!chatId || !user) return
@@ -48,10 +51,6 @@ function Chat() {
     }
     fetchChat()
   }, [chatId, user])
-
-  // useEffect(() => {
-  //   bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  // }, [messages])
 
   const handleSend = async () => {
     const trimmedMessage = newMessage.trim()
@@ -84,80 +83,36 @@ function Chat() {
 
   if (chatLoading) return <p>Loading chat...</p>
   if (error && messages.length === 0) return <p>{error}</p>
+  
   // Replace X (error) with icon/emoji
 
   return (
     <div className={styles.wrapper}>
-      <div className={`${styles.wrapperDiv} ${styles.buttonDiv}`}>
-        <h4 className={styles.groupName}>{chatName}</h4>
-        {isGroup && isAdmin && (
-          renaming ? (
-            <div>
-              <input
-                value={newName}
-                onChange={e => setNewName(e.target.value)}
-                placeholder={chatName}
-                minLength={5}
-                maxLength={100}
-              />
-              <button
-                onClick={handleRename}
-                disabled={!newName.trim()}
-                className={styles.button}
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setRenaming(false)}
-                className={styles.button}
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setRenaming(true)}
-              className={styles.button}
-            >
-              Rename
-            </button>
-          )
-        )}
-      </div>
+      <ChatHeader
+        chatName={chatName}
+        isGroup={isGroup}
+        isAdmin={isAdmin}
+        renaming={renaming}
+        newName={newName}
+        onNewNameChange={setNewName}
+        onRenameSubmit={handleRename}
+        onRenameStart={() => setRenaming(true)}
+        onRenameCancel={() => setRenaming(false)}
+      />
       {error && (
         <div className={styles.errorBanner}>
           <p>{error}</p>
-          <button
-            onClick={() => setError(null)}
-            className={styles.button}
-          >
+          <button onClick={() => setError(null)} className={styles.button}>
             X
           </button>
         </div>
       )}
-      <ul className={styles.wrapperDiv}>
-        {messages.map((msg) => (
-          <li key={msg.id} className={styles.messageItem}>
-            <strong>{msg.sender.username}</strong>: {msg.text}
-          </li>
-        ))}
-      </ul>
-      {/* <div ref={bottomRef} /> */}
-      <div className={`${styles.wrapperDiv} ${styles.buttonDiv}`}>
-        <input
-          value={newMessage}
-          onChange={e => setNewMessage(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleSend()}
-          placeholder='Type a message...'
-        />
-        <button
-          onClick={handleSend}
-          disabled={!newMessage.trim()}
-          className={styles.button}
-        >
-          Send
-        </button>
-      </div>
+      <MessageList messages={messages} />
+      <MessageInput
+        value={newMessage}
+        onChange={setNewMessage}
+        onSend={handleSend}
+      />
     </div>
   )
 }

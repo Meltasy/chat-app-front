@@ -1,5 +1,7 @@
 import { getUserHeader } from './utils/authenticate'
 
+// When sending messages add sender: { id: string } here and in backend
+
 const API_URL = import.meta.env.VITE_BACKEND_URL
 
 interface UserResponse {
@@ -17,7 +19,11 @@ interface ChatPreview {
   id: string
   name: string
   members: { id: string, username: string, role: string }[]
-  lastMessage: { text: string, sentAt: string, sender: { username: string } } | null
+  lastMessage: {
+    text: string
+    sentAt: string
+    sender: { username: string }
+  } | null
 }
 
 interface AllChatsResponse {
