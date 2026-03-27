@@ -1,37 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
-import { getAllUsers, createChat } from '../api.ts'
+import { createChat } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
+import { useAllUsers } from '../hooks/useAllUsers.ts'
 import styles from '../assets/components/NewChat.module.css'
 
 function NewChat() {
   const { user } = useOutletContext<{ user: User | null }>()
-  const [allUsers, setAllUsers] = useState<{ id: string, username: string }[]>([])
+  const { allUsers, usersLoading, usersError } = useAllUsers()
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [groupName, setGroupName] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const [usersLoading, setUsersLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const navigate = useNavigate()
-
-  // Should I move this to a Custom Hook?
-  useEffect(() => {
-    if (!user) return
-    const userId = user.id
-    async function fetchUsers() {
-      try {
-        const result = await getAllUsers()
-        if(result.success && result.users) {
-          setAllUsers(result.users.filter(u => u.id !== userId))
-        }
-      } catch {
-        setError('Failed to load users.')
-      } finally {
-        setUsersLoading(false)
-      }
-    }
-    fetchUsers()
-  }, [user])
 
   const toggleUser = (id: string) => {
     setSelectedUsers(prev =>
@@ -98,7 +79,7 @@ function NewChat() {
       </button>
       {usersLoading && <p>Loading users...</p>}
       {creating && <p>Creating chat...</p>}
-      {error && <p>{error}</p>}
+      {(error || usersError) && <p>{error || usersError}</p>}
     </div>
   )
 }

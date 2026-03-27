@@ -1,7 +1,5 @@
 import { getUserHeader } from './utils/authenticate'
 
-// When sending messages add sender: { id: string } here and in backend
-
 const API_URL = import.meta.env.VITE_BACKEND_URL
 
 interface UserResponse {
@@ -65,7 +63,7 @@ interface GetMessageResponse {
       id: string
       text: string
       sentAt: string
-      sender: { username: string }
+      sender: { id: string, username: string }
     }[]
   }
 }
@@ -77,7 +75,7 @@ interface MessageResponse {
     id: string
     text: string
     sentAt: string
-    sender: { username: string }
+    sender: { id: string, username: string }
   }
 }
 

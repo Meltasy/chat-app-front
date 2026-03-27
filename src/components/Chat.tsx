@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
-import { useParams, useOutletContext } from 'react-router-dom'
-import { getMessages, sendMessage, renameChat } from '../api.ts'
+import { useParams, useOutletContext, useNavigate } from 'react-router-dom'
+import { getMessages, sendMessage, renameChat, deleteChat, addMember, 
+  removeMember, updateMessage, deleteMessage } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
+import { useAllUsers } from '../hooks/useAllUsers.ts'
 import ChatHeader from './ChatHeader.tsx'
 import MessageList from './MessageList.tsx'
 import MessageInput from './MessageInput.tsx'
 import styles from '../assets/components/Chat.module.css'
 
-// Add options to (ADMIN only) deleteChat, addMemeber, removeMember, (MEMBER's own only) editMessage, deleteMessage
-
 function Chat() {
   const { chatId } = useParams<{ chatId: string }>()
   const { user } = useOutletContext<{ user: User | null }>()
+  const navigate = useNavigate()
   const [messages, setMessages] = useState<{
-    id: string, text: string, sentAt: string, sender: { username: string }
+    id: string, text: string, sentAt: string, sender: { id: string, username: string }
   }[]>([])
   const [members, setMembers] = useState<{
     id: string, username: string, role: string
@@ -23,10 +24,13 @@ function Chat() {
   const [newMessage, setNewMessage] = useState('')
   const [newName, setNewName] = useState('')
   const [renaming, setRenaming] = useState(false)
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null)
+  const [editingText, setEditingText] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [chatLoading, setChatLoading] = useState(true)
 
   const isAdmin = members?.find(m => m.id === user?.id)?.role === 'ADMIN'
+  const { allUsers } = useAllUsers(isAdmin)
 
   // Should I move the useEffect into a CustomHook?
 
@@ -81,8 +85,80 @@ function Chat() {
     }
   }
 
+  const handleDeleteChat = async () => {
+    if (!chatId) return
+    try {
+      const data = await deleteChat(chatId)
+      if (data.success) navigate('/chats/')
+    } catch {
+      setError('Failed to delete chat.')
+    }
+  }
+
+  const handleAddMember = async (userId: string) => {
+    if (!chatId) return
+    try {
+      const data = await addMember(chatId, userId)
+      if (data.success) {
+        const added = allUsers.find(u => u.id === userId)
+        if (added) {
+          setMembers(prev => [...prev, { id: added.id, username: added.username, role: 'MEMBER' }])
+        }
+      }
+    } catch {
+      setError('Failed to add member.')
+    }
+  }
+
+  const handleRemoveMember = async (userId: string) => {
+    if (!chatId) return
+    try {
+      const data = await removeMember(chatId, userId)
+      if (data.success) setMembers(prev => prev.filter(m => m.id !== userId))
+    } catch {
+      setError('Failed to remove member.')
+    }
+  }
+
+  const handleEditMessage = async (messageId: string) => {
+    const trimmedText = editingText.trim()
+    if(!trimmedText || !chatId) return
+    try {
+      const data = await updateMessage(chatId, messageId, trimmedText)
+      if (data.success && data.data) {
+        setMessages(prev => prev.map(m => m.id === messageId ? { ...m, text: data.data!.text} : m))
+        setEditingMessageId(null)
+        setEditingText('')
+      }
+    } catch {
+      setError('Failed to edit message.')
+    }
+  }
+  
+  const handleDeleteMessage = async (messageId: string) => {
+    if(!chatId) return
+    try {
+      const data = await deleteMessage(chatId, messageId)
+      if (data.success) setMessages(prev => prev.filter(m => m.id !== messageId))
+    } catch {
+      setError('Failed to delete message.')
+    }
+  }
+
+  const startEditing = (messageId: string, currentText: string) => {
+    setEditingMessageId(messageId)
+    setEditingText(currentText)
+  }
+
+  const cancelEditing = () => {
+    setEditingMessageId(null)
+    setEditingText('')
+  }
+
   if (chatLoading) return <p>Loading chat...</p>
   if (error && messages.length === 0) return <p>{error}</p>
+
+  const nonMembers = allUsers.filter(u => !members.find(m => m.id === u.id))
   
   // Replace X (error) with icon/emoji
 
@@ -94,20 +170,41 @@ function Chat() {
         isAdmin={isAdmin}
         renaming={renaming}
         newName={newName}
+        members={members}
+        nonMembers={nonMembers}
+        currentUserId={user?.id ?? ''}
         onNewNameChange={setNewName}
         onRenameSubmit={handleRename}
         onRenameStart={() => setRenaming(true)}
         onRenameCancel={() => setRenaming(false)}
+        onDeleteChat={handleDeleteChat}
+        onAddMember={handleAddMember}
+        onRemoveMember={handleRemoveMember}
       />
       {error && (
         <div className={styles.errorBanner}>
           <p>{error}</p>
-          <button onClick={() => setError(null)} className={styles.button}>
-            X
+          <button
+            onClick={() => setError(null)}
+            className={styles.iconButton}
+            aria-label='Close'
+            title='Close'
+          >
+            ❌
           </button>
         </div>
       )}
-      <MessageList messages={messages} />
+      <MessageList
+        messages={messages}
+        currentUserId={user?.id ?? ''}
+        editingMessageId={editingMessageId}
+        editingText={editingText}
+        onEditingTextChange={setEditingText}
+        onEditStart={startEditing}
+        onEditSubmit={handleEditMessage}
+        onEditCancel={cancelEditing}
+        onDelete={handleDeleteMessage}
+      />
       <MessageInput
         value={newMessage}
         onChange={setNewMessage}

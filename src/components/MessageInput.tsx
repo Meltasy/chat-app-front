@@ -27,5 +27,4 @@ function MessageInput({ value, onChange, onSend }: Props) {
   )
 }
 
-
 export default MessageInput
