@@ -48,7 +48,7 @@ function NewChat() {
     <div className={styles.wrapper}>
       <div className={styles.wrapperDiv}>
         <h4>Choose friends:</h4>
-        {allUsers.map(u => (
+        {allUsers.filter(u => u.id !== user.id).map(u => (
           <div
             key={u.id}
             onClick={() => toggleUser(u.id)}

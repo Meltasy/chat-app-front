@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import styles from '../assets/components/Chat.module.css'
+import { useClickOutside } from '../hooks/useClickOutside'
 
 interface Member {
   id: string
@@ -48,22 +49,12 @@ function ChatHeader({
   const [menuView, setMenuView] = useState<MenuView>('main')
   const menuRef = useRef<HTMLDivElement>(null)
 
-  // Should I move the useEffect into a CustomHook?
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        closeMenu()
-      }
-    }
-    if (menuOpen) document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [menuOpen])
-
   const closeMenu = () => {
     setMenuOpen(false)
     setMenuView('main')
   }
+
+  useClickOutside(menuRef, closeMenu, menuOpen)
 
   const handleRenameClick = () => {
     closeMenu()

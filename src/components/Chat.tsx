@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useParams, useOutletContext, useNavigate } from 'react-router-dom'
-import { getMessages, sendMessage, renameChat, deleteChat, addMember, 
-  removeMember, updateMessage, deleteMessage } from '../api.ts'
+import { sendMessage, renameChat, deleteChat, addMember, removeMember, 
+  deleteMessage } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
+import { useChatData } from '../hooks/useChatData.ts'
+import { useMessageEditing } from '../hooks/useMessageEditing.ts'
 import { useAllUsers } from '../hooks/useAllUsers.ts'
 import ChatHeader from './ChatHeader.tsx'
 import MessageList from './MessageList.tsx'
@@ -12,49 +14,17 @@ import styles from '../assets/components/Chat.module.css'
 function Chat() {
   const { chatId } = useParams<{ chatId: string }>()
   const { user } = useOutletContext<{ user: User | null }>()
+  const { messages, setMessages, members, setMembers, chatName, setChatName, 
+    isGroup, chatLoading, error, setError } = useChatData(chatId, user)
+  const { editingMessageId, editingText, setEditingText, startEditing, cancelEditing, 
+    handleEditMessage } = useMessageEditing(chatId, setMessages, setError)
   const navigate = useNavigate()
-  const [messages, setMessages] = useState<{
-    id: string, text: string, sentAt: string, sender: { id: string, username: string }
-  }[]>([])
-  const [members, setMembers] = useState<{
-    id: string, username: string, role: string
-  }[]>([])
-  const [chatName, setChatName] = useState('')
-  const [isGroup, setIsGroup] = useState(false)
   const [newMessage, setNewMessage] = useState('')
   const [newName, setNewName] = useState('')
   const [renaming, setRenaming] = useState(false)
-  const [editingMessageId, setEditingMessageId] = useState<string | null>(null)
-  const [editingText, setEditingText] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [chatLoading, setChatLoading] = useState(true)
 
   const isAdmin = members?.find(m => m.id === user?.id)?.role === 'ADMIN'
   const { allUsers } = useAllUsers(isAdmin)
-
-  // Should I move the useEffect into a CustomHook?
-
-  useEffect(() => {
-    if (!chatId || !user) return
-    const fetchChat = async () => {
-      try {
-        const data = await getMessages(chatId)
-        if (data.success && data.chat) {
-          setMessages(data.chat.messages)
-          setMembers(data.chat.members)
-          setChatName(data.chat.name ?? '')
-          setIsGroup(data.chat.isGroup)
-        } else {
-          setError(data.message)
-        }
-      } catch {
-        setError('Failed to load chat.')
-      } finally {
-        setChatLoading(false)
-      }
-    }
-    fetchChat()
-  }, [chatId, user])
 
   const handleSend = async () => {
     const trimmedMessage = newMessage.trim()
@@ -119,21 +89,6 @@ function Chat() {
       setError('Failed to remove member.')
     }
   }
-
-  const handleEditMessage = async (messageId: string) => {
-    const trimmedText = editingText.trim()
-    if(!trimmedText || !chatId) return
-    try {
-      const data = await updateMessage(chatId, messageId, trimmedText)
-      if (data.success && data.data) {
-        setMessages(prev => prev.map(m => m.id === messageId ? { ...m, text: data.data!.text} : m))
-        setEditingMessageId(null)
-        setEditingText('')
-      }
-    } catch {
-      setError('Failed to edit message.')
-    }
-  }
   
   const handleDeleteMessage = async (messageId: string) => {
     if(!chatId) return
@@ -145,22 +100,10 @@ function Chat() {
     }
   }
 
-  const startEditing = (messageId: string, currentText: string) => {
-    setEditingMessageId(messageId)
-    setEditingText(currentText)
-  }
-
-  const cancelEditing = () => {
-    setEditingMessageId(null)
-    setEditingText('')
-  }
-
   if (chatLoading) return <p>Loading chat...</p>
   if (error && messages.length === 0) return <p>{error}</p>
 
   const nonMembers = allUsers.filter(u => !members.find(m => m.id === u.id))
-  
-  // Replace X (error) with icon/emoji
 
   return (
     <div className={styles.wrapper}>

@@ -51,7 +51,7 @@ interface ChatResponse {
   message: string
 }
 
-interface GetMessageResponse {
+interface GetMessagesResponse {
   success: boolean
   message: string
   chat?: {
@@ -215,7 +215,7 @@ async function removeMember(chatId: string, userId: string): Promise<ChatRespons
   return response.json()
 }
 
-async function getMessages(chatId: string): Promise<GetMessageResponse> {
+async function getMessages(chatId: string): Promise<GetMessagesResponse> {
   const response = await fetch(`${API_URL}/chats/${chatId}/messages`, {
     mode: 'cors',
     method: 'GET',
@@ -276,7 +276,7 @@ export type {
   AllUsersResponse,
   CreateChatResponse,
   ChatResponse,
-  GetMessageResponse,
+  GetMessagesResponse,
   MessageResponse,
   ErrorResponse
 }
