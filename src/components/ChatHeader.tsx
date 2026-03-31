@@ -1,6 +1,10 @@
 import { useState, useRef } from 'react'
-import styles from '../assets/components/Chat.module.css'
 import { useClickOutside } from '../hooks/useClickOutside'
+import { Check, X, Menu, PencilLine, UserRoundPlus, UserRoundX, 
+  Trash2, Undo2 } from 'lucide-react'
+import styles from '../assets/components/Chat.module.css'
+
+// When rename is opened for one group and you move to a different group, rename remains open with the new group's name
 
 interface Member {
   id: string
@@ -90,11 +94,16 @@ function ChatHeader({
             onClick={onRenameSubmit}
             disabled={!newName.trim()}
             className={styles.button}
+            aria-label='Save name'
           >
-            Save
+            <Check />
           </button>
-          <button onClick={onRenameCancel} className={styles.button}>
-            Cancel
+          <button
+            onClick={onRenameCancel}
+            className={styles.button}
+            aria-label='Cancel rename'
+          >
+            <X />
           </button>
         </div>
       ) : (
@@ -103,12 +112,11 @@ function ChatHeader({
       {isGroup && isAdmin && !renaming && (
         <div className={styles.menuContainer} ref={menuRef}>
           <button
-            className={styles.iconButton}
+            className={styles.button}
             onClick={() => { setMenuOpen(o => !o); setMenuView('main') }}
             aria-label='Chat options'
-            title='Chat options'
           >
-            ☰
+            <Menu />
           </button>
           {menuOpen && (
             <div className={styles.dropdown}>
@@ -118,26 +126,33 @@ function ChatHeader({
                     className={styles.dropdownItem}
                     onClick={handleRenameClick}
                   >
-                    Edit
+                    <PencilLine size={16} />
+                    <span>Rename group</span>
                   </button>
+                  <hr className={styles.dropdownDivider} />
                   <button
                     className={styles.dropdownItem}
                     onClick={() => setMenuView('addMember')}
                   >
-                    Add members
+                    <UserRoundPlus size={16} />
+                    <span>Add members</span>
                   </button>
                   <button
                     className={styles.dropdownItem}
                     onClick={() => setMenuView('removeMember')}
+                    aria-label='Remove members'
+                    title='Remove members'
                   >
-                    Remove members
+                    <UserRoundX size={16} />
+                    <span>Remove members</span>
                   </button>
                   <hr className={styles.dropdownDivider} />
                   <button
                     className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
                     onClick={() => setMenuView('confirmDelete')}
                   >
-                    Delete
+                    <Trash2 size={16} />
+                    <span>Delete Group</span>
                   </button>
                 </>
               )}
@@ -146,12 +161,13 @@ function ChatHeader({
                   <button
                     className={styles.dropdownBack}
                     onClick={() => setMenuView('main')}
+                    aria-label='Back to menu'
                   >
-                    Back
+                    <Undo2 size={16} />
                   </button>
-                  <p className={styles.dropdownLabel}>Add a member</p>
+                  <p className={styles.dropdownLabel}>Add members</p>
                   {nonMembers.length === 0 ? (
-                    <p className={styles.dropdownEmpty}>No users to add</p>
+                    <p className={styles.dropdownEmpty}>No users to add.</p>
                   ) : (
                     nonMembers.map(u => (
                       <button
@@ -170,12 +186,13 @@ function ChatHeader({
                   <button
                     className={styles.dropdownBack}
                     onClick={() => setMenuView('main')}
+                    aria-label='Back to menu'
                   >
-                    Back
+                    <Undo2 size={16} />
                   </button>
-                  <p className={styles.dropdownLabel}>Remove a member</p>
+                  <p className={styles.dropdownLabel}>Remove members</p>
                   {removableMembers.length === 0 ? (
-                    <p className={styles.dropdownEmpty}>No members to remove</p>
+                    <p className={styles.dropdownEmpty}>No members to remove.</p>
                   ) : (
                     removableMembers.map(m => (
                       <button
@@ -191,17 +208,18 @@ function ChatHeader({
               )}
               {menuView === 'confirmDelete' && (
                 <>
-                  <p className={styles.dropdownLabel}>Delete this group?</p>
-                  <p className={styles.dropdownEmpty}>This can't be undone.</p>
+                  <p className={styles.dropdownLabel}>This can't be undone</p>
                   <button
                     className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
                     onClick={() => { onDeleteChat(); closeMenu() }}
                   >
-                    Delete
+                    <Trash2 size={16} />
+                    <span>Delete Group</span>
                   </button>
                   <button
                     className={styles.dropdownItem} onClick={() => setMenuView('main')}
                   >
+                    <X size={16} />
                     Cancel
                   </button>
                 </>

@@ -46,19 +46,7 @@ function NewChat() {
 
   return(
     <div className={styles.wrapper}>
-      <div className={styles.wrapperDiv}>
-        <h4>Choose friends:</h4>
-        {allUsers.filter(u => u.id !== user.id).map(u => (
-          <div
-            key={u.id}
-            onClick={() => toggleUser(u.id)}
-            className={`${styles.userItem} ${selectedUsers.includes(u.id) ? styles.selected : ''}`}
-          >
-            {u.username}
-          </div>
-        ))}
-      </div>
-      <div className={styles.wrapperDiv}>
+      <div className={styles.nameWrapper}>
         <h4>Group name (optional):</h4>
           <input
             type='text'
@@ -69,6 +57,20 @@ function NewChat() {
             maxLength={100}
             className={styles.inputName}
           />
+      </div>
+      <div className={styles.userWrapper}>
+        <h4>Choose friends:</h4>
+        <div className={styles.userList}>
+          {allUsers.filter(u => u.id !== user.id).map(u => (
+            <div
+              key={u.id}
+              onClick={() => toggleUser(u.id)}
+              className={`${styles.userItem} ${selectedUsers.includes(u.id) ? styles.selected : ''}`}
+            >
+              {u.username}
+            </div>
+          ))}
+        </div>
       </div>
       <button
         disabled={selectedUsers.length === 0}

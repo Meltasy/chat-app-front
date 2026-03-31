@@ -60,7 +60,9 @@
 }
 
 .dropdownItem {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   width: 100%;
   padding: 0.5rem 1rem;
   text-align: left;
@@ -184,7 +186,7 @@
   border-color: var(--secondary-color);
 }
 
-.button {
+/* .button {
   text-decoration: none;
   border: none;
   outline: none;
@@ -194,7 +196,7 @@
   padding: 0.5rem 1rem;
   cursor: pointer;
   white-space: nowrap;
-}
+} */
 
 .button:hover {
   opacity: 0.75;
@@ -203,10 +205,6 @@
 .button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-}
-
-.iconButton {
-  opacity: 1;
 }
 
 /* Error */

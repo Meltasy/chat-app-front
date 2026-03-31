@@ -1,3 +1,4 @@
+import { SendHorizontal } from 'lucide-react'
 import styles from '../assets/components/Chat.module.css'
 
 interface Props {
@@ -20,8 +21,9 @@ function MessageInput({ value, onChange, onSend }: Props) {
         onClick={onSend}
         disabled={!value.trim()}
         className={styles.button}
+        aria-label='Send message'
       >
-        Send
+        <SendHorizontal />
       </button>
     </div>
   )

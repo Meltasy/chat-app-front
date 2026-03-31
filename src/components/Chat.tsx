@@ -6,6 +6,7 @@ import type { User } from '../utils/authenticate.ts'
 import { useChatData } from '../hooks/useChatData.ts'
 import { useMessageEditing } from '../hooks/useMessageEditing.ts'
 import { useAllUsers } from '../hooks/useAllUsers.ts'
+import { X } from 'lucide-react'
 import ChatHeader from './ChatHeader.tsx'
 import MessageList from './MessageList.tsx'
 import MessageInput from './MessageInput.tsx'
@@ -129,11 +130,10 @@ function Chat() {
           <p>{error}</p>
           <button
             onClick={() => setError(null)}
-            className={styles.iconButton}
+            className={styles.button}
             aria-label='Close'
-            title='Close'
           >
-            ❌
+            <X />
           </button>
         </div>
       )}

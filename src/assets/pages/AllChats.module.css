@@ -2,55 +2,45 @@
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-areas:
-    "sidebar" "main";
-  min-height: 100vh;
-  min-height: 100dvh;
-  justify-items: start;
-  align-items: start;
-  gap: 2rem;
+    "sidebar main";
   padding: 1rem;
-}
-
-.main {
-  padding: 0 3rem;
+  gap: 3rem;
 }
 
 .aside {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-items: center;
-  gap: 0.5rem 0;
+  align-items: stretch;
 }
 
-.chatItem {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  padding: 0.5rem 0.5rem 0;
+.chatSection {
+  margin-top: 1rem;
 }
 
-.button {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  background-color: var(--secondary-color);
-  padding: 0.5rem 1rem;
-  justify-self: center;
-}
-
-.button:hover {
-  opacity: 0.75;
-}
-
-.activeBtn {
-  background-color: var(--tertiary-color);
+.newChat {
+  display: flex;
   font-weight: 700;
-  font-size: 1.2rem;
+  color: var(--primary-color);
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
 }
 
-.activeChat {
+.listLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background-color: inherit;
+  cursor: pointer;
+  padding: 0.5rem 0.5rem 0.2rem;
+  border-radius: 0.5rem;
+}
+
+.listLink:hover {
+  background-color: var(--tertiary-color);
+}
+
+.activeLink {
   background-color: var(--tertiary-color);
 }
 

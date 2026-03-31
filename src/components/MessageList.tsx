@@ -1,3 +1,4 @@
+import { Check, X, PencilLine, Trash2 } from 'lucide-react'
 import styles from '../assets/components/Chat.module.css'
 
 interface Message {
@@ -53,11 +54,16 @@ function MessageList({
                   onClick={() => onEditSubmit(msg.id)}
                   disabled={!editingText.trim()}
                   className={styles.button}
+                  aria-label='Save message'
                 >
-                  Save
+                  <Check color='green' />
                 </button>
-                <button onClick={onEditCancel} className={styles.button}>
-                  Cancel
+                <button
+                  onClick={onEditCancel}
+                  className={styles.button}
+                  aria-label='Cancel edit message'
+                >
+                  <X color='red' />
                 </button>
               </div>
             ) : (
@@ -68,20 +74,18 @@ function MessageList({
                 {isOwn && (
                   <div className={styles.messageActions}>
                     <button
-                      className={styles.iconButton}
+                      className={styles.button}
                       onClick={() => onEditStart(msg.id, msg.text)}
                       aria-label='Edit message'
-                      title='Edit'
                     >
-                      ✏️
+                      <PencilLine size={16} />
                     </button>
                     <button
-                      className={styles.iconButton}
+                      className={styles.button}
                       onClick={() => onDelete(msg.id)}
                       aria-label='Delete Message'
-                      title='Delete'
                     >
-                      🗑️
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 )}

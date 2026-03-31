@@ -29,10 +29,9 @@ body {
 .wrapperApp {
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
   grid-template-areas:
     "menu"
-    "header"
     "main"
     "footer";
   min-height: 100vh;
@@ -47,6 +46,14 @@ body {
   text-align: center;
 }
 
+nav {
+  grid-area: menu;
+}
+
+footer {
+  grid-area: footer;
+}
+
 h1 {
   font-size: 3rem;
   color: var(--primary-color);
@@ -55,19 +62,19 @@ h1 {
 
 h2 {
   font-size: 2.5rem;
-  color: var(--secondary-color);
+  color: var(--primary-color);
   margin: 1rem 0;
 }
 
 h3 {
   font-size: 1.5rem;
-  color: var(--secondary-color);
+  color: var(--primary-color);
   margin: 0.75rem 0;
 }
 
 h4 {
   font-size: 1.2rem;
-  color: var(--secondary-color);
+  color: var(--primary-color);
   margin: 0.5rem 0;
 }
 
@@ -77,8 +84,11 @@ p {
 }
 
 ul {
-  padding: 0;
   list-style-type: none;
+}
+
+li {
+  padding: 0.25rem 0rem;
 }
 
 form {
@@ -100,53 +110,25 @@ label {
 }
 
 input {
-  font-family: inherit;
-  letter-spacing: 0.1rem;
-  line-height: 1.6;
-  color: var(--primary-color);
+  font: inherit;
   background-color: var(--background-color);
   border: none;
   outline: none;
-  padding: 0.6rem 1.2rem;
-  min-width: 400px;
+  padding: 0.5rem 1rem;
+  min-width: 200px;
 }
 
-.labelInputBox {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.buttonBox {
-  align-self: center;
-}
-
-.button {
-  font-family: inherit;
+button {
+  display: block;
+  font: inherit;
   font-weight: 700;
-  letter-spacing: 0.1rem;
-  color: var(--background-color);
+  text-decoration: none;
+  color: inherit;
   background-color: var(--secondary-color);
   border: none;
+  border-radius: 0.5rem;
   outline: none;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  &:hover {
-    color: var(--primary-color);
-    background-color: var(--background-color);
-  }
-}
-
-.errorBox {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.errors {
-  color: var(--error-text-color);
-  font-style: italic;
-  margin-top: 0.5rem;
-  max-width: 425px;
+  padding: 0.5rem 1rem;
 }
 
 @media (max-width: 768px) {
