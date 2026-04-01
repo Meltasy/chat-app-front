@@ -75,7 +75,6 @@ function NewChat() {
       <button
         disabled={selectedUsers.length === 0}
         onClick={handleCreate}
-        className={styles.button}
       >
         Create Chat
       </button>

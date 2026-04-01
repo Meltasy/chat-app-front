@@ -2,42 +2,24 @@ import { useState, type FormEvent, type ChangeEvent } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { login } from '../api.ts'
 import { getCurrentUser, type User } from '../utils/authenticate.ts'
+import { validateLoginForm, type LoginErrors } from '../utils/formValidation.ts'
+import styles from '../assets/pages/Home.module.css'
 
 interface OutletContext {
   onUserUpdate: (user: User | null) => void
 }
 
-interface FormErrors {
-  email?: string
-  password?: string
-  general?: string
-}
-
 function LogIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<FormErrors>({})
+  const [errors, setErrors] = useState<LoginErrors>({})
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { onUserUpdate } = useOutletContext<OutletContext>()
 
-  const validateForm = (): FormErrors => {
-    const newErrors: FormErrors = {}
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-    if (!email.trim()) {
-      newErrors.email = 'Email is required.'
-    } else if (!emailRegex.test(email)) {
-      newErrors.email = 'Please enter a valid email address.'
-    }
-    if (!password.trim()) {
-      newErrors.password = 'Password is required.'
-    }
-    return newErrors
-  }
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const validationErrors = validateForm()
+    const validationErrors = validateLoginForm(email, password)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
       return
@@ -92,10 +74,10 @@ function LogIn() {
       <main>
         <h2>Log in</h2>
         <form onSubmit={handleSubmit}>
-          <div className='errorBox'>
-            {errors.general && <div className='errors'>{errors.general}</div>}
+          <div className={styles.errorBox}>
+            {errors.general && <div className={styles.errors}>{errors.general}</div>}
           </div>
-          <div className='labelInputBox'>
+          <div className={styles.labelInputBox}>
             <label htmlFor='login-email'>Email *</label>
             <input
               id='login-email'
@@ -108,11 +90,11 @@ function LogIn() {
               autoFocus
               required
             />
-            <div className='errorBox'>
-              {errors.email && <div className='errors'>{errors.email}</div>}
+            <div className={styles.errorBox}>
+              {errors.email && <div className={styles.errors}>{errors.email}</div>}
             </div>
           </div>
-          <div className='labelInputBox'>
+          <div className={styles.labelInputBox}>
             <label htmlFor='login-password'>Password *</label>
             <input
               id='login-password'
@@ -123,12 +105,12 @@ function LogIn() {
               onChange={handlePasswordChange}
               required
             />
-            <div className='errorBox'>
-              {errors.password && <div className='errors'>{errors.password}</div>}
+            <div className={styles.errorBox}>
+              {errors.password && <div className={styles.errors}>{errors.password}</div>}
             </div>
           </div>
-          <div className='buttonBox'>
-            <button className='button' type='submit' disabled={loading}>
+          <div className={styles.buttonBox}>
+            <button type='submit' disabled={loading}>
               {loading ? 'logging in ...' : 'Log in'}
             </button>
           </div>

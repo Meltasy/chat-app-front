@@ -41,7 +41,7 @@ body {
 .mainApp {
   grid-area: main;
   margin: 0 auto;
-  max-width: 1500px;
+  max-width: 1200px;
   width: 90%;
   text-align: center;
 }
@@ -113,9 +113,10 @@ input {
   font: inherit;
   background-color: var(--background-color);
   border: none;
+  border-radius: 0.5rem;
   outline: none;
   padding: 0.5rem 1rem;
-  min-width: 200px;
+  min-width: 300px;
 }
 
 button {
@@ -129,6 +130,14 @@ button {
   border-radius: 0.5rem;
   outline: none;
   padding: 0.5rem 1rem;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.75;
+  }
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 }
 
 @media (max-width: 768px) {

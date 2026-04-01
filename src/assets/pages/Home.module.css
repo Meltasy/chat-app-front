@@ -1,8 +1,31 @@
 .wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 3rem;
+}
+
+.errorBox {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.errors {
+  color: var(--error-text-color);
+  font-style: italic;
+  margin-top: 0.5rem;
+  max-width: 425px;
+  padding: 0.5rem 1rem;
+}
+
+.labelInputBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.buttonBox {
+  align-self: center;
 }
 
 @media (max-width: 768px) {

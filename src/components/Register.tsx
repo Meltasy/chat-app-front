@@ -2,17 +2,11 @@ import { useState, type FormEvent, type ChangeEvent } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { register } from '../api.ts'
 import { getCurrentUser, type User } from '../utils/authenticate.ts'
+import { validateRegisterForm, type RegisterErrors } from '../utils/formValidation.ts'
+import styles from '../assets/pages/Home.module.css'
 
 interface OutletContext {
   onUserUpdate: (user: User | null) => void
-}
-
-interface FormErrors {
-  username?: string
-  email?: string
-  password?: string
-  confirmPassword?: string
-  general?: string
 }
 
 function Register() {
@@ -22,7 +16,7 @@ function Register() {
     password: '',
     confirmPassword: ''
   })
-  const [errors, setErrors] = useState<FormErrors>({})
+  const [errors, setErrors] = useState<RegisterErrors>({})
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { onUserUpdate } = useOutletContext<OutletContext>()
@@ -50,42 +44,11 @@ function Register() {
     setErrors(newErrors)
   }
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
-    const usernameRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-    const passowrdRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,24}$/
-    if (!form.username.trim()) {
-      newErrors.username = 'Username is required.'
-    } else if (form.username.length < 6 || form.username.length > 100) {
-      newErrors.username = 'Username must be between 6 and 100 characters.'
-    } else if (!usernameRegex.test(form.username.trim())) {
-      newErrors.username = 'Username must contain only letters with single spaces between words.'
-    }
-    if (!form.email.trim()) {
-      newErrors.email = 'Email is required.'
-    } else if (form.email.length > 100) {
-      newErrors.email = 'Email must not exceed 100 characters.'
-    } else if (!emailRegex.test(form.email)) {
-      newErrors.email = 'Please enter a valid email address.'
-    }
-    if (!form.password) {
-      newErrors.password = 'Password is required.'
-    } else if (!passowrdRegex.test(form.password)) {
-      newErrors.password = 'Password must contain one number, one lowercase letter, one uppercase letter, one special character, no spaces, and be between 8 and 24 characters.'
-    }
-    if (!form.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password.'
-    } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match.'
-    }
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!validateForm()) {
+    const validationErrors = validateRegisterForm(form)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
       return
     }
     setLoading(true)
@@ -118,10 +81,10 @@ function Register() {
       <main>
         <h2>Register</h2>
         <form onSubmit={handleSubmit}>
-          <div className='errorBox'>
-            {errors.general && <div className='errors'>{errors.general}</div>}
+          <div className={styles.errorBox}>
+            {errors.general && <div className={styles.errors}>{errors.general}</div>}
           </div>
-          <div className='labelInputBox'>
+          <div className={styles.labelInputBox}>
             <label htmlFor='username'>Username *</label>
             <input
               id='username'
@@ -135,11 +98,11 @@ function Register() {
               autoFocus
               required
             />
-            <div className='errorBox'>
-              {errors.username && <div className='errors'>{errors.username}</div>}
+            <div className={styles.errorBox}>
+              {errors.username && <div className={styles.errors}>{errors.username}</div>}
             </div>
           </div>
-          <div className='labelInputBox'>
+          <div className={styles.labelInputBox}>
             <label htmlFor='register-email'>Email *</label>
             <input
               id='register-email'
@@ -152,11 +115,11 @@ function Register() {
               onChange={handleChange}
               required
             />
-            <div className='errorBox'>
-              {errors.email && <div className='errors'>{errors.email}</div>}
+            <div className={styles.errorBox}>
+              {errors.email && <div className={styles.errors}>{errors.email}</div>}
             </div>
           </div>
-          <div className='labelInputBox'>
+          <div className={styles.labelInputBox}>
             <label htmlFor='register-password'>Password *</label>
             <input
               id='register-password'
@@ -168,11 +131,11 @@ function Register() {
               onChange={handleChange}
               required
             />
-            <div className='errorBox'>
-              {errors.password && <div className='errors'>{errors.password}</div>}
+            <div className={styles.errorBox}>
+              {errors.password && <div className={styles.errors}>{errors.password}</div>}
             </div>
           </div>
-          <div className='labelInputBox'>
+          <div className={styles.labelInputBox}>
             <label htmlFor='register-confirmPassword'>Confirm password *</label>
             <input
               id='register-confirmPassword'
@@ -183,12 +146,12 @@ function Register() {
               onChange={handleChange}
               required
             />
-            <div className='errorBox'>
-              {errors.confirmPassword && <div className='errors'>{errors.confirmPassword}</div>}
+            <div className={styles.errorBox}>
+              {errors.confirmPassword && <div className={styles.errors}>{errors.confirmPassword}</div>}
             </div>
           </div>
-          <div className='buttonBox'>
-            <button className='button' type='submit' disabled={loading}>
+          <div className={styles.buttonBox}>
+            <button type='submit' disabled={loading}>
               {loading ? 'Signing up ...' : 'Sign up'}
             </button>
           </div>

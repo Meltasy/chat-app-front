@@ -15,12 +15,12 @@ function MessageInput({ value, onChange, onSend }: Props) {
         onChange={e => onChange(e.target.value)}
         onKeyDown={e => e.key === 'Enter' && onSend()}
         placeholder='Type a message...'
-        className={styles.input}
+        className={styles.inputChat}
       />
       <button
         onClick={onSend}
         disabled={!value.trim()}
-        className={styles.button}
+        className={styles.iconButton}
         aria-label='Send message'
       >
         <SendHorizontal />

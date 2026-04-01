@@ -4,8 +4,6 @@ import { Check, X, Menu, PencilLine, UserRoundPlus, UserRoundX,
   Trash2, Undo2 } from 'lucide-react'
 import styles from '../assets/components/Chat.module.css'
 
-// When rename is opened for one group and you move to a different group, rename remains open with the new group's name
-
 interface Member {
   id: string
   username: string
@@ -30,7 +28,7 @@ interface Props {
   onRemoveMember: (userId: string) => void
 }
 
-type MenuView = 'main' | 'addMember' | 'removeMember' | 'confirmDelete'
+type MenuView = 'main' | 'addMember' | 'removeMember'
 
 function ChatHeader({
   chatName,
@@ -51,14 +49,16 @@ function ChatHeader({
 } : Props) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuView, setMenuView] = useState<MenuView>('main')
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
   const closeMenu = () => {
     setMenuOpen(false)
     setMenuView('main')
+    setConfirmDelete(false)
   }
 
-  useClickOutside(menuRef, closeMenu, menuOpen)
+  useClickOutside(menuRef, closeMenu, menuOpen || confirmDelete)
 
   const handleRenameClick = () => {
     closeMenu()
@@ -87,38 +87,51 @@ function ChatHeader({
             placeholder={chatName}
             minLength={5}
             maxLength={100}
-            className={styles.input}
+            className={styles.inputChat}
             autoFocus
           />
-          <button
-            onClick={onRenameSubmit}
-            disabled={!newName.trim()}
-            className={styles.button}
-            aria-label='Save name'
-          >
-            <Check />
-          </button>
-          <button
-            onClick={onRenameCancel}
-            className={styles.button}
-            aria-label='Cancel rename'
-          >
-            <X />
-          </button>
+          <div className={styles.buttonBox}>
+            <button
+              onClick={onRenameSubmit}
+              disabled={!newName.trim()}
+              className={styles.iconButton}
+              aria-label='Save name'
+            >
+              <Check />
+            </button>
+            <button
+              onClick={onRenameCancel}
+              className={styles.iconButton}
+              aria-label='Cancel rename'
+            >
+              <X />
+            </button>
+          </div>
         </div>
       ) : (
-        <h4 className={styles.groupName}>{chatName}</h4>
+        <h4>{chatName}</h4>
       )}
-      {isGroup && isAdmin && !renaming && (
+      {((!isGroup) || (isGroup && isAdmin && !renaming)) && (
         <div className={styles.menuContainer} ref={menuRef}>
-          <button
-            className={styles.button}
-            onClick={() => { setMenuOpen(o => !o); setMenuView('main') }}
-            aria-label='Chat options'
-          >
-            <Menu />
-          </button>
-          {menuOpen && (
+          {isGroup && isAdmin && !renaming && (
+            <button
+              className={styles.iconButton}
+              onClick={() => { setMenuOpen(o => !o); setMenuView('main') }}
+              aria-label='Chat options'
+            >
+              <Menu />
+            </button>
+          )}
+          {!isGroup && (
+            <button
+              className={styles.iconButton}
+              onClick={() => setConfirmDelete(o => !o)}
+              aria-label='Delete Chat'
+            >
+              <Trash2 />
+            </button>
+          )}
+          {isGroup && menuOpen && (
             <div className={styles.dropdown}>
               {menuView === 'main' && (
                 <>
@@ -148,8 +161,8 @@ function ChatHeader({
                   </button>
                   <hr className={styles.dropdownDivider} />
                   <button
-                    className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
-                    onClick={() => setMenuView('confirmDelete')}
+                    className={styles.dropdownItem}
+                    onClick={() => { closeMenu(); setConfirmDelete(true) }}
                   >
                     <Trash2 size={16} />
                     <span>Delete Group</span>
@@ -158,16 +171,19 @@ function ChatHeader({
               )}
               {menuView === 'addMember' && (
                 <>
-                  <button
-                    className={styles.dropdownBack}
-                    onClick={() => setMenuView('main')}
-                    aria-label='Back to menu'
-                  >
-                    <Undo2 size={16} />
-                  </button>
-                  <p className={styles.dropdownLabel}>Add members</p>
+                  <div className={styles.dropdownHeader}>
+                    <button
+                      className={styles.dropdownBack}
+                      onClick={() => setMenuView('main')}
+                      aria-label='Back to menu'
+                    >
+                      <Undo2 size={16} />
+                    </button>
+                    <p className={styles.dropdownLabel}>Add members</p>
+                  </div>
+                  <hr className={styles.dropdownDivider} />
                   {nonMembers.length === 0 ? (
-                    <p className={styles.dropdownEmpty}>No users to add.</p>
+                    <p className={styles.dropdownEmpty}>No members to add.</p>
                   ) : (
                     nonMembers.map(u => (
                       <button
@@ -183,14 +199,17 @@ function ChatHeader({
               )}
               {menuView === 'removeMember' && (
                 <>
-                  <button
-                    className={styles.dropdownBack}
-                    onClick={() => setMenuView('main')}
-                    aria-label='Back to menu'
-                  >
-                    <Undo2 size={16} />
-                  </button>
-                  <p className={styles.dropdownLabel}>Remove members</p>
+                  <div className={styles.dropdownHeader}>
+                    <button
+                      className={styles.dropdownBack}
+                      onClick={() => setMenuView('main')}
+                      aria-label='Back to menu'
+                    >
+                      <Undo2 size={16} />
+                    </button>
+                    <p className={styles.dropdownLabel}>Remove members</p>
+                  </div>
+                  <hr className={styles.dropdownDivider} />
                   {removableMembers.length === 0 ? (
                     <p className={styles.dropdownEmpty}>No members to remove.</p>
                   ) : (
@@ -206,24 +225,25 @@ function ChatHeader({
                   )}
                 </>
               )}
-              {menuView === 'confirmDelete' && (
-                <>
-                  <p className={styles.dropdownLabel}>This can't be undone</p>
-                  <button
-                    className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
-                    onClick={() => { onDeleteChat(); closeMenu() }}
-                  >
-                    <Trash2 size={16} />
-                    <span>Delete Group</span>
-                  </button>
-                  <button
-                    className={styles.dropdownItem} onClick={() => setMenuView('main')}
-                  >
-                    <X size={16} />
-                    Cancel
-                  </button>
-                </>
-              )}
+            </div>
+          )}
+          {confirmDelete && (
+            <div className={styles.dropdown}>
+              <p className={`${styles.dropdownLabel} ${styles.labelDelete}`}>This can't be undone</p>
+              <hr className={styles.dropdownDivider} />
+              <button
+               className={`${styles.dropdownItem}`}
+                onClick={() => { onDeleteChat(); setConfirmDelete(false) }}
+              >
+                <Trash2 size={16} />
+                <span>Delete {isGroup ? 'Group' : 'Chat'}</span>
+              </button>
+              <button
+                className={styles.dropdownItem} onClick={() => setConfirmDelete(false)}
+              >
+                <X size={16} />
+                Cancel
+              </button>
             </div>
           )}
         </div>

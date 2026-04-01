@@ -17,9 +17,6 @@ function Home() {
 
   return(
     <div>
-      <header>
-        <h1>Please register or log in.</h1>
-      </header>
       <main className={styles.wrapper}>
         <LogIn />
         <Register />

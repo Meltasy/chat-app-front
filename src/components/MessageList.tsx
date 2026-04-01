@@ -43,28 +43,30 @@ function MessageList({
                 <input
                   value={editingText}
                   onChange={e => onEditingTextChange(e.target.value)}
-                  className={styles.input}
+                  className={styles.inputChat}
                   autoFocus
                   onKeyDown={e => {
                     if (e.key === 'Enter') onEditSubmit(msg.id)
                     if (e.key === 'Escape') onEditCancel()
                   }}
                 />
-                <button
-                  onClick={() => onEditSubmit(msg.id)}
-                  disabled={!editingText.trim()}
-                  className={styles.button}
-                  aria-label='Save message'
-                >
-                  <Check color='green' />
-                </button>
-                <button
-                  onClick={onEditCancel}
-                  className={styles.button}
-                  aria-label='Cancel edit message'
-                >
-                  <X color='red' />
-                </button>
+                <div className={styles.buttonBox}>
+                  <button
+                    onClick={() => onEditSubmit(msg.id)}
+                    disabled={!editingText.trim()}
+                    className={styles.iconButton}
+                    aria-label='Save message'
+                  >
+                    <Check size={16} />
+                  </button>
+                  <button
+                    onClick={onEditCancel}
+                    className={styles.iconButton}
+                    aria-label='Cancel edit message'
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               </div>
             ) : (
               <div className={styles.messageRow}>
@@ -74,15 +76,15 @@ function MessageList({
                 {isOwn && (
                   <div className={styles.messageActions}>
                     <button
-                      className={styles.button}
                       onClick={() => onEditStart(msg.id, msg.text)}
+                      className={styles.iconButton}
                       aria-label='Edit message'
                     >
                       <PencilLine size={16} />
                     </button>
                     <button
-                      className={styles.button}
                       onClick={() => onDelete(msg.id)}
+                      className={styles.iconButton}
                       aria-label='Delete Message'
                     >
                       <Trash2 size={16} />

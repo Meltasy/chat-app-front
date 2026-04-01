@@ -30,14 +30,12 @@
   display: block;
   text-decoration: none;
   color: inherit;
-  background-color: inherit;
   cursor: pointer;
   padding: 0.5rem 0.5rem 0.2rem;
   border-radius: 0.5rem;
-}
-
-.listLink:hover {
-  background-color: var(--tertiary-color);
+  &:hover {
+    background-color: var(--tertiary-color);
+  }
 }
 
 .activeLink {

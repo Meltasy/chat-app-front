@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useOutletContext, useNavigate } from 'react-router-dom'
 import { sendMessage, renameChat, deleteChat, addMember, removeMember, 
   deleteMessage } from '../api.ts'
@@ -26,6 +26,10 @@ function Chat() {
 
   const isAdmin = members?.find(m => m.id === user?.id)?.role === 'ADMIN'
   const { allUsers } = useAllUsers(isAdmin)
+
+  useEffect(() => {
+    if (renaming) setRenaming(false)
+  }, [chatId])
 
   const handleSend = async () => {
     const trimmedMessage = newMessage.trim()
@@ -129,11 +133,11 @@ function Chat() {
         <div className={styles.errorBanner}>
           <p>{error}</p>
           <button
+            className={styles.iconButton}
             onClick={() => setError(null)}
-            className={styles.button}
             aria-label='Close'
           >
-            <X />
+            <X size={16} />
           </button>
         </div>
       )}
