@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useOutletContext, useNavigate } from 'react-router-dom'
+import { useSocket } from '../hooks/useSocket.ts'
 import { sendMessage, renameChat, deleteChat, addMember, removeMember, 
   deleteMessage } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
@@ -26,6 +27,8 @@ function Chat() {
 
   const isAdmin = members?.find(m => m.id === user?.id)?.role === 'ADMIN'
   const { allUsers } = useAllUsers(isAdmin)
+
+  useSocket(chatId, setMessages, user?.id)
 
   useEffect(() => {
     if (renaming) setRenaming(false)

@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import socket from './utils/socket.ts'
 import Navbar from './components/Navbar.tsx'
 import Footer from './components/Footer.tsx'
 import { getCurrentUser, type User } from './utils/authenticate.ts'
@@ -20,6 +21,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('token')
     setUser(null)
+    socket.disconnect()
     navigate('/')
   }
 

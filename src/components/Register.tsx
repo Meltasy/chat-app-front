@@ -1,5 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
+import socket from '../utils/socket.ts'
 import { register } from '../api.ts'
 import { getCurrentUser, type User } from '../utils/authenticate.ts'
 import { validateRegisterForm, type RegisterErrors } from '../utils/formValidation.ts'
@@ -59,6 +60,7 @@ function Register() {
         localStorage.setItem('token', response.token)
         const user = getCurrentUser()
         onUserUpdate(user)
+        socket.connect()
         navigate('/profile')
       }
     } catch (error) {

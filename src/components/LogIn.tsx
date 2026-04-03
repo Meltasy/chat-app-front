@@ -1,5 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
+import socket from '../utils/socket.ts'
 import { login } from '../api.ts'
 import { getCurrentUser, type User } from '../utils/authenticate.ts'
 import { validateLoginForm, type LoginErrors } from '../utils/formValidation.ts'
@@ -32,6 +33,7 @@ function LogIn() {
         localStorage.setItem('token', response.token)
         const user = getCurrentUser()
         onUserUpdate(user)
+        socket.connect()
         navigate('/profile')
       }
     } catch (error) {
