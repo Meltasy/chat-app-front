@@ -16,21 +16,27 @@ export function useSocket(
   useEffect(() => {
     if (!chatId) return
     socket.emit('join_chat', chatId)
-    socket.on('new_message', (message: Message) => {
+    
+    const handleNewMessage = (message: Message) => {
       if (message.sender.id === currentUserId) return
       setMessages(prev => [...prev, message])
-    })
-    socket.on('message_edited', ({ id, text }: { id: string, text: string }) => {
+    }
+    const handleEdited = ({ id, text }: { id: string, text: string }) => {
       setMessages(prev => prev.map(m => m.id === id ? { ...m, text } : m))
-    })
-    socket.on('message_deleted', ({ id }: { id: string }) => {
+    }
+    const handleDeleted = ({ id }: { id: string }) => {
       setMessages(prev => prev.filter(m => m.id !== id))
-    })
+    }
+    
+    socket.on('new_message', handleNewMessage)
+    socket.on('message_edited', handleEdited)
+    socket.on('message_deleted', handleDeleted)
+    
     return () => {
       socket.emit('leave_chat', chatId)
-      socket.off('new_message')
-      socket.off('message_edited')
-      socket.off('message_deleted')
+      socket.off('new_message', handleNewMessage)
+      socket.off('message_edited', handleEdited)
+      socket.off('message_deleted', handleDeleted)
     }
   }, [chatId])
 }

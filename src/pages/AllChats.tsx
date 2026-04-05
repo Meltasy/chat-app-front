@@ -1,12 +1,16 @@
-import { Outlet, useOutletContext, NavLink } from 'react-router-dom'
+import { Outlet, useOutletContext, NavLink, useParams } from 'react-router-dom'
 import type { User } from '../utils/authenticate.ts'
 import { useAllChats } from '../hooks/useAllChats.ts'
+import { useChatListSocket } from '../hooks/useChatListSocket.ts'
 import { MessageCirclePlus } from 'lucide-react'
 import styles from '../assets/pages/AllChats.module.css'
 
 function AllChats() {
   const { user } = useOutletContext<{ user: User | null }>()
-  const { chats, error, loading } = useAllChats(user)
+  const { chats, setChats, error, loading } = useAllChats(user)
+  const { chatId } = useParams<{chatId?: string}>()
+
+  useChatListSocket(chatId, chats, setChats)
 
   if (!user) return null
 

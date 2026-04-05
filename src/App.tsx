@@ -12,6 +12,12 @@ function App() {
   useEffect(() => {
     const currentUser = getCurrentUser()
     setUser(currentUser)
+    if (currentUser) {
+      socket.connect()
+      socket.on('connect', () => {
+        socket.emit('join_user_room', currentUser.id)
+      })
+    }
   }, [])
 
   const handleUserUpdate = (updatedUser: User | null) => {

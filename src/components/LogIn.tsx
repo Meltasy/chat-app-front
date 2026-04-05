@@ -34,6 +34,9 @@ function LogIn() {
         const user = getCurrentUser()
         onUserUpdate(user)
         socket.connect()
+        socket.on('connect', () => {
+          socket.emit('join_user_room', user!.id)
+        })
         navigate('/profile')
       }
     } catch (error) {

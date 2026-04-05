@@ -26,5 +26,5 @@ export function useAllChats(user: User | null) {
     fetchChats()
   }, [user])
 
-  return { chats, error, loading }
+  return { chats, setChats, error, loading }
 }

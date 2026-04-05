@@ -18,6 +18,7 @@ interface ChatPreview {
   name: string
   members: { id: string, username: string, role: string }[]
   lastMessage: {
+    id: string
     text: string
     sentAt: string
     sender: { username: string }
