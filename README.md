@@ -1,4 +1,4 @@
-# chat-app
+# chat-app-front
 
 [![License ISC](https://img.shields.io/github/license/Meltasy/chat-app-front)](https://opensource.org/license/isc-license-txt)
 [![ECMAScript](https://img.shields.io/badge/ECMAScript-2025-blue.svg)](https://ecma-international.org/publications-and-standards/standards/ecma-262/)
@@ -9,7 +9,7 @@
 
 **Add web address above**
 
-A chat app ...
+A full-stack real-time chat app frontend supporting direct messages and group chats, with live message delivery powered by Socket.IO.
 
 Check out my [Chat App]()!
 
@@ -17,12 +17,20 @@ Check out my [Chat App]()!
 
 ## Features
 
+* 💬 **Real-time messaging:** Instant message delivery using Socket.IO — no refresh needed
+* 📱 **Responsive design:** Optimized layout that adapts easily to mobile and desktop screens
+* 👥 **Flexible chat types:** Create direct messages with one person or group chats with multiple members
+* 🛠️ **Full message lifecycle:** Send, edit, and delete your own messages with live updates for all members
+* 👮 **Role-based access control:** Admins can rename their groups, add and remove members, and delete the chat
 * 🔒 **Enhanced security:** Protected routes and authenticated sessions throughout
-* **What else?** Add 4-5 features
 
 ## Future Improvements
 
-* What next?
+* Typing indicators to show when another user is composing a message
+* Read receipts so users know when their messages have been seen
+* User presence indicators showing online/offline status
+* Image and file uploads in messages
+* Push notifications for new messages
 
 ## Tech Stack
 
@@ -30,6 +38,7 @@ Check out my [Chat App]()!
 * React 18 with modern hooks
 * Vite for fast development and building
 * React Router for client-side routing
+* Socket.IO for real-time WebSocket communication
 * CSS modules for styling
 
 ## Local Installation
@@ -37,10 +46,10 @@ Check out my [Chat App]()!
 Prerequisite: Node.js v22.12.0
 
 1. Clone the repository: `git clone git@github.com:Meltasy/chat-app-front.git`
-5. Set up the frontend: `cd ../chat-app-front` and `npm install`
-6. Configure environment variable with an `.env` file in the root directory:
-    * `VITE_API_URL="your-backend-port"`
-7. Start frontend server: `npm run dev`
+2. Set up the frontend: `cd ../chat-app-front` and `npm install`
+3. Configure environment variable with an `.env` file in the root directory:
+    * `VITE_BACKEND_URL="your-backend-url"`
+4. Start frontend server: `npm run dev`
 
 ## License
 
