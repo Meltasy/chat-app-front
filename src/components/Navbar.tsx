@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import type { User } from '../utils/authenticate.ts'
+import NavbarAnimation from './NavbarAnimation.tsx'
 import styles from '../assets/components/Navbar.module.css'
 
 interface NavbarProps {
@@ -10,16 +11,7 @@ interface NavbarProps {
 function Navbar({ user, onLogout }: NavbarProps) {
   return (
     <nav className={styles.wrapper}>
-      {!user && (
-        <NavLink
-          to='/'
-          className={({ isActive }) =>
-            isActive ? `${styles.linkTitle} ${styles.active}` : styles.linkTitle
-          }
-        >
-          Home
-        </NavLink>
-      )}
+      {!user && <NavbarAnimation />}
       {user && (
         <>
           <NavLink
