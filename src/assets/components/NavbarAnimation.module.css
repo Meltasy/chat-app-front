@@ -7,82 +7,90 @@
   overflow: hidden;
 }
 
-.fadeIn {
-  display: flex;
-  align-items: center;
-  animation: fadeIn 0.8s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateX(-20px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
 .scene {
   position: relative;
   display: flex;
   align-items: center;
-  width: 16em;
-  height: 2em;
+  width: 22rem;
+  height: 2.6rem;
+  transition: opacity 1.4s ease;
+}
+
+.wordTrail span {
+  display: inline-block;
 }
 
 .rabbitRunner {
   position: absolute;
   left: 0;
-  animation: rabbitRun 3s ease-in-out forwards;
-  z-index: 1;
+  animation:
+    rabbitRun 4s ease-in-out forwards;
 }
 
 @keyframes rabbitRun {
-  from { left: 1.5em; }
-  to   { left: 100%; }
+  0%   { left: 0; }
+  100% { left: 18rem; }
 }
 
 .rabbitIcon {
-  animation: bob 0.25s ease-in-out infinite alternate;
+  animation: runCycle 0.25s infinite;
 }
 
-@keyframes bob {
-  from { transform: translateY(0px) rotate(-5deg); }
-  to   { transform: translateY(-3px) rotate(5deg); }
+@keyframes runCycle {
+  0%   { transform: translateY(0) scaleX(1.08) scaleY(0.92) rotate(-8deg); }
+  25%  { transform: translateY(-2px) rotate(-4deg); }
+  50%  { transform: translateY(-5px) scaleX(0.95) scaleY(1.05) rotate(6deg); }
+  75%  { transform: translateY(-2px) rotate(2deg); }
+  100% { transform: translateY(0) scaleX(1.08) scaleY(0.92) rotate(-8deg); }
 }
 
-.titleText {
+.wordTrail {
+  position: absolute;
+  left: 2rem;
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--primary-color);
 }
 
-.titleTextTemp {
-  position: absolute;
-  left: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 0;
-  animation: typeIn 3s steps(26, end) forwards;
+.word1 {
+  opacity: 0;
+  animation: reveal 0.3s forwards 1.5s;
 }
 
-@keyframes typeIn {
-  from { width: 0; }
-  to   { width: 14em; }
+.word2 {
+  opacity: 0;
+  animation: reveal 0.3s forwards 2s;
 }
 
-.condensing {
+.word3 {
+  opacity: 0;
+  animation: reveal 0.3s forwards 2.5s;
+}
+
+.word4 {
+  opacity: 0;
+  animation: reveal 0.3s forwards 3s;
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.finalLogo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  animation: fadeSwap 0.6s ease forwards;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  animation: finalPlace 0.4s ease;
 }
 
-@keyframes fadeSwap {
-  0%   { opacity: 1; }
-  50%  { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-.settled {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex-direction: row;
+@keyframes finalPlace {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
