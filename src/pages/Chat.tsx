@@ -8,9 +8,9 @@ import { useChatData } from '../hooks/useChatData.ts'
 import { useMessageEditing } from '../hooks/useMessageEditing.ts'
 import { useAllUsers } from '../hooks/useAllUsers.ts'
 import { X } from 'lucide-react'
-import ChatHeader from './ChatHeader.tsx'
-import MessageList from './MessageList.tsx'
-import MessageInput from './MessageInput.tsx'
+import ChatHeader from '../components/ChatHeader.tsx'
+import MessageList from '../components/MessageList.tsx'
+import MessageInput from '../components/MessageInput.tsx'
 import styles from '../assets/components/Chat.module.css'
 
 function Chat() {
