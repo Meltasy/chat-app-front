@@ -95,6 +95,19 @@ const userHeader = (): HeadersInit => ({
   ...getUserHeader()
 })
 
+async function handleResponse<T>(response: Response): Promise<T> {
+  if (response.status === 401) {
+    localStorage.removeItem('token')
+    window.location.href = '/'
+    throw new Error('Session expired')
+  }
+  if (!response.ok) {
+    const errorData: ErrorResponse = await response.json()
+    throw new Error(errorData.message || `Request failed: ${response.status}`)
+  }
+  return response.json()
+}
+
 async function register(username: string, email: string, password: string): Promise<UserResponse> {
   const response = await fetch(`${API_URL}/index/register`, {
     mode: 'cors',
@@ -104,7 +117,7 @@ async function register(username: string, email: string, password: string): Prom
   })
   if (!response.ok) {
     const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to register: $(response.status)`)
+    throw new Error(errorData.message || `Failed to register: ${response.status}`)
   }
   return response.json()
 }
@@ -129,11 +142,7 @@ async function getAllChats(): Promise<AllChatsResponse> {
     method: 'GET',
     headers: userHeader()
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to fetch chats: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function getAllUsers(): Promise<AllUsersResponse> {
@@ -141,11 +150,7 @@ async function getAllUsers(): Promise<AllUsersResponse> {
     method: 'GET',
     headers: userHeader()
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to fetch users: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function createChat(members: string[], name?: string): Promise<CreateChatResponse> {
@@ -155,11 +160,7 @@ async function createChat(members: string[], name?: string): Promise<CreateChatR
     headers: userHeader(),
     body: JSON.stringify({ members, ...(name && { name }) })
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to create chat: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function renameChat(chatId: string, name: string): Promise<ChatResponse> {
@@ -169,11 +170,7 @@ async function renameChat(chatId: string, name: string): Promise<ChatResponse> {
     headers: userHeader(),
     body: JSON.stringify({ name })
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to rename chat: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function deleteChat(chatId: string): Promise<ChatResponse> {
@@ -182,11 +179,7 @@ async function deleteChat(chatId: string): Promise<ChatResponse> {
     method: 'DELETE',
     headers: userHeader(),
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to delete chat: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function addMember(chatId: string, userId: string): Promise<ChatResponse> {
@@ -196,11 +189,7 @@ async function addMember(chatId: string, userId: string): Promise<ChatResponse> 
     headers: userHeader(),
     body: JSON.stringify({ userId })
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to add member: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function removeMember(chatId: string, userId: string): Promise<ChatResponse> {
@@ -209,11 +198,7 @@ async function removeMember(chatId: string, userId: string): Promise<ChatRespons
     method: 'DELETE',
     headers: userHeader(),
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to remove member: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function getMessages(chatId: string): Promise<GetMessagesResponse> {
@@ -222,11 +207,7 @@ async function getMessages(chatId: string): Promise<GetMessagesResponse> {
     method: 'GET',
     headers: userHeader()
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to fetch messages: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function sendMessage(chatId: string, text: string): Promise<MessageResponse> {
@@ -236,11 +217,7 @@ async function sendMessage(chatId: string, text: string): Promise<MessageRespons
     headers: userHeader(),
     body: JSON.stringify({ text })
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to send message: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function updateMessage(chatId: string, messageId: string, text: string): Promise<MessageResponse> {
@@ -250,11 +227,7 @@ async function updateMessage(chatId: string, messageId: string, text: string): P
     headers: userHeader(),
     body: JSON.stringify({ text })
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to update message: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 async function deleteMessage(chatId: string, messageId: string): Promise<ChatResponse> {
@@ -263,11 +236,7 @@ async function deleteMessage(chatId: string, messageId: string): Promise<ChatRes
     method: 'DELETE',
     headers: userHeader(),
   })
-  if (!response.ok) {
-    const errorData: ErrorResponse = await response.json()
-    throw new Error(errorData.message || `Failed to delete message: ${response.status}`)
-  }
-  return response.json()
+  return handleResponse(response)
 }
 
 export type {

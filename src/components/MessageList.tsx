@@ -1,5 +1,5 @@
 import { Check, X, PencilLine, Trash2 } from 'lucide-react'
-import styles from '../assets/components/Chat.module.css'
+import styles from '../assets/pages/Chat.module.css'
 
 interface Message {
   id: string

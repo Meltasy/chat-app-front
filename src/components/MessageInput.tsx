@@ -1,5 +1,5 @@
 import { SendHorizontal } from 'lucide-react'
-import styles from '../assets/components/Chat.module.css'
+import styles from '../assets/pages/Chat.module.css'
 
 interface Props {
   value: string

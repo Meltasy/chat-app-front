@@ -11,7 +11,7 @@ import { X } from 'lucide-react'
 import ChatHeader from '../components/ChatHeader.tsx'
 import MessageList from '../components/MessageList.tsx'
 import MessageInput from '../components/MessageInput.tsx'
-import styles from '../assets/components/Chat.module.css'
+import styles from '../assets/pages/Chat.module.css'
 
 function Chat() {
   const { chatId } = useParams<{ chatId: string }>()

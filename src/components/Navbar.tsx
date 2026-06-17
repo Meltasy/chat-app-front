@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import type { User } from '../utils/authenticate.ts'
 import NavbarAnimation from './NavbarAnimation.tsx'
+import RabbitIcon from './RabbitIcon.tsx'
 import styles from '../assets/components/Navbar.module.css'
 
 interface NavbarProps {
@@ -36,6 +37,7 @@ function Navbar({ user, onLogout }: NavbarProps) {
           >
             Logout
           </button>
+          <RabbitIcon size={40} />
         </>
       )}
     </nav>

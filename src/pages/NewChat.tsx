@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom'
 import { createChat } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
 import { useAllUsers } from '../hooks/useAllUsers.ts'
-import styles from '../assets/components/NewChat.module.css'
+import styles from '../assets/pages/NewChat.module.css'
 
 function NewChat() {
   const { user } = useOutletContext<{ user: User | null }>()

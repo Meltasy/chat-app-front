@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { Check, X, Menu, PencilLine, UserRoundPlus, UserRoundX, 
   Trash2, Undo2 } from 'lucide-react'
-import styles from '../assets/components/Chat.module.css'
+import styles from '../assets/pages/Chat.module.css'
 
 interface Member {
   id: string

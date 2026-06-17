@@ -7,6 +7,7 @@ import Chat from './pages/Chat.tsx'
 import NewChat from './pages/NewChat.tsx'
 import ProtectedRoute from './components/ProtectedRoute.tsx'
 import ErrorPage from './pages/ErrorPage.tsx'
+import ErrorBoundary from './components/ErrorBoundary.tsx'
 
 const routes: RouteObject[] = [
   {
@@ -32,11 +33,19 @@ const routes: RouteObject[] = [
           },
           {
             path: 'new',
-            element: <NewChat />
+            element: (
+              <ErrorBoundary fallback={<p>New chat failed to load. Please try again.</p>}>
+                <NewChat />
+              </ErrorBoundary>
+            )
           },
           {
             path: ':chatId',
-            element: <Chat />
+            element: (
+              <ErrorBoundary fallback={<p>This chat failed to load. Please try again.</p>}>
+                <Chat />
+              </ErrorBoundary>
+            )
           }
         ]
       },
