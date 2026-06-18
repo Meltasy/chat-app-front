@@ -192,6 +192,15 @@ async function addMember(chatId: string, userId: string): Promise<ChatResponse> 
   return handleResponse(response)
 }
 
+async function updateMemberRole(chatId: string, userId: string): Promise<ChatResponse> {
+  const response = await fetch(`${API_URL}/chats/${chatId}/members/${userId}/role`, {
+    mode: 'cors',
+    method: 'PATCH',
+    headers: userHeader(),
+  })
+  return handleResponse(response)
+}
+
 async function removeMember(chatId: string, userId: string): Promise<ChatResponse> {
   const response = await fetch(`${API_URL}/chats/${chatId}/members/${userId}`, {
     mode: 'cors',
@@ -259,6 +268,7 @@ export {
   createChat,
   renameChat,
   addMember,
+  updateMemberRole,
   removeMember,
   deleteChat,
   getMessages,
