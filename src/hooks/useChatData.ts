@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getMessages } from '../api.ts'
+import socket from '../utils/socket.ts'
 import type { User } from '../utils/authenticate.ts'
 
 export function useChatData(chatId: string | undefined, user: User | null) {
@@ -35,6 +36,14 @@ export function useChatData(chatId: string | undefined, user: User | null) {
     }
     fetchChat()
   }, [chatId, user])
+
+  useEffect(() => {
+    const handleRoleUpdated = ({ userId, role }: { userId: string, role: string }) => {
+      setMembers(prev => prev.map(m => m.id === userId ? { ...m, role } : m))
+    }
+    socket.on('member_role_updated', handleRoleUpdated)
+    return () => { socket.off('member_role_updated', handleRoleUpdated)}
+  }, [])
 
   return { messages, setMessages, members, setMembers, chatName, 
     setChatName, isGroup, chatLoading, error, setError }

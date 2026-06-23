@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { Check, X, Menu, PencilLine, UserRoundPlus, UserRoundX, 
-  Trash2, Undo2 } from 'lucide-react'
+  UserRoundCog, ShieldUser, UserRound, Trash2, Undo2,
+} from 'lucide-react'
 import styles from '../assets/pages/Chat.module.css'
 
 interface Member {
@@ -25,10 +26,11 @@ interface Props {
   onRenameCancel: () => void
   onDeleteChat: () => void
   onAddMember: (userId: string) => void
+  onUpdateMemberRole: (userId: string) => void
   onRemoveMember: (userId: string) => void
 }
 
-type MenuView = 'main' | 'addMember' | 'removeMember'
+type MenuView = 'main' | 'addMember' | 'manageRoles' | 'removeMember'
 
 function ChatHeader({
   chatName,
@@ -45,6 +47,7 @@ function ChatHeader({
   onRenameCancel,
   onDeleteChat,
   onAddMember,
+  onUpdateMemberRole,
   onRemoveMember
 } : Props) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -159,6 +162,13 @@ function ChatHeader({
                     <UserRoundX size={16} />
                     <span>Remove members</span>
                   </button>
+                  <button
+                    className={styles.dropdownItem}
+                    onClick={() => setMenuView('manageRoles')}
+                  >
+                    <UserRoundCog size={16} />
+                    <span>Manage roles</span>
+                  </button>
                   <hr className={styles.dropdownDivider} />
                   <button
                     className={styles.dropdownItem}
@@ -223,6 +233,40 @@ function ChatHeader({
                       </button>
                     ))
                   )}
+                </>
+              )}
+              {menuView === 'manageRoles' && (
+                <>
+                  <div className={styles.dropdownHeader}>
+                    <button
+                      className={styles.dropdownBack}
+                      onClick={() => setMenuView('main')}
+                      aria-label='Back to menu'
+                    >
+                      <Undo2 size={16} />
+                    </button>
+                    <p className={styles.dropdownLabel}>Manage roles</p>
+                  </div>
+                  <hr className={styles.dropdownDivider} />
+                  {members.filter(m => m.id !== currentUserId).map(m => (
+                    <div key={m.id} className={styles.dropdownItem}>
+                      <span className={styles.memberName}>{m.username}</span>
+                      <button
+                        className={styles.roleToggle}
+                        onClick={() => onUpdateMemberRole(m.id)}
+                        aria-label={`Toggle role for ${m.username}`}
+                      >
+                        <ShieldUser
+                          size={16}
+                          className={m.role === 'ADMIN' ? styles.roleActive : styles.roleInactive}
+                        />
+                        <UserRound
+                          size={16}
+                          className={m.role === 'MEMBER' ? styles.roleActive : styles.roleInactive}
+                        />
+                      </button>
+                    </div>
+                  ))}
                 </>
               )}
             </div>

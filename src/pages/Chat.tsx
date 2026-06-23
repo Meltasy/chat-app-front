@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useOutletContext, useNavigate } from 'react-router-dom'
 import { useSocket } from '../hooks/useSocket.ts'
-import { sendMessage, renameChat, deleteChat, addMember, removeMember, 
+import { sendMessage, renameChat, deleteChat, addMember, updateMemberRole, removeMember, 
   deleteMessage } from '../api.ts'
 import type { User } from '../utils/authenticate.ts'
 import { useChatData } from '../hooks/useChatData.ts'
@@ -42,6 +42,8 @@ function Chat() {
       if (data.success && data.data) {
         setMessages(prev => [...prev, data.data!])
         setNewMessage('')
+      } else {
+        setError(data.message)
       }
     } catch {
       setError('Failed to send message.')
@@ -57,6 +59,8 @@ function Chat() {
         setChatName(trimmedName)
         setNewName('')
         setRenaming(false)
+      } else {
+        setError(data.message)
       }
     } catch {
       setError('Failed to rename chat.')
@@ -67,7 +71,11 @@ function Chat() {
     if (!chatId) return
     try {
       const data = await deleteChat(chatId)
-      if (data.success) navigate('/chats/')
+      if (data.success) {
+        navigate('/chats/')
+      } else {
+        setError(data.message)
+      }
     } catch {
       setError('Failed to delete chat.')
     }
@@ -82,9 +90,27 @@ function Chat() {
         if (added) {
           setMembers(prev => [...prev, { id: added.id, username: added.username, role: 'MEMBER' }])
         }
+      } else {
+        setError(data.message)
       }
     } catch {
       setError('Failed to add member.')
+    }
+  }
+
+  const handleUpdateMemberRole = async (userId: string) => {
+    if (!chatId) return
+    try {
+      const data = await updateMemberRole(chatId, userId)
+      if (data.success) {
+        setMembers(prev => prev.map(m => 
+          m.id === userId ? { ...m, role: m.role === 'ADMIN' ? 'MEMBER' : 'ADMIN' } : m
+        ))
+       } else {
+        setError(data.message)
+       }
+    } catch {
+      setError('Failed to update member role.')
     }
   }
 
@@ -92,7 +118,11 @@ function Chat() {
     if (!chatId) return
     try {
       const data = await removeMember(chatId, userId)
-      if (data.success) setMembers(prev => prev.filter(m => m.id !== userId))
+      if (data.success) {
+        setMembers(prev => prev.filter(m => m.id !== userId))
+      } else {
+        setError(data.message)
+      }
     } catch {
       setError('Failed to remove member.')
     }
@@ -102,7 +132,11 @@ function Chat() {
     if(!chatId) return
     try {
       const data = await deleteMessage(chatId, messageId)
-      if (data.success) setMessages(prev => prev.filter(m => m.id !== messageId))
+      if (data.success) {
+        setMessages(prev => prev.filter(m => m.id !== messageId))
+      } else {
+        setError(data.message)
+      }
     } catch {
       setError('Failed to delete message.')
     }
@@ -130,6 +164,7 @@ function Chat() {
         onRenameCancel={() => setRenaming(false)}
         onDeleteChat={handleDeleteChat}
         onAddMember={handleAddMember}
+        onUpdateMemberRole={handleUpdateMemberRole}
         onRemoveMember={handleRemoveMember}
       />
       {error && (
