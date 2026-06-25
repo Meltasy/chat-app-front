@@ -55,7 +55,7 @@ function AllChats() {
           )}
         </div>
       </aside>
-      <main>
+      <main className={styles.main}>
         <Outlet context={{ user }} />
       </main>
     </div>

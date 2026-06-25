@@ -67,6 +67,7 @@ interface GetMessagesResponse {
       sender: { id: string, username: string }
     }[]
   }
+  hasMore?: boolean
 }
 
 interface MessageResponse {
@@ -210,8 +211,9 @@ async function removeMember(chatId: string, userId: string): Promise<ChatRespons
   return handleResponse(response)
 }
 
-async function getMessages(chatId: string): Promise<GetMessagesResponse> {
-  const response = await fetch(`${API_URL}/chats/${chatId}/messages`, {
+async function getMessages(chatId: string, cursor?: string): Promise<GetMessagesResponse> {
+  const params = cursor ? `?cursor=${cursor}&limit=30` : '?limit=30'
+  const response = await fetch(`${API_URL}/chats/${chatId}/messages${params}`, {
     mode: 'cors',
     method: 'GET',
     headers: userHeader()

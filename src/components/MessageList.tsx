@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Check, X, PencilLine, Trash2 } from 'lucide-react'
 import styles from '../assets/pages/Chat.module.css'
 
@@ -13,6 +14,9 @@ interface Props {
   currentUserId: string
   editingMessageId: string | null
   editingText: string
+  hasMore: boolean
+  loadingMore: boolean
+  onLoadOlder: () => void
   onEditingTextChange: (value: string) => void
   onEditStart: (messageId: string, currentText: string) => void
   onEditSubmit: (messageId: string) => void
@@ -25,14 +29,42 @@ function MessageList({
   currentUserId,
   editingMessageId,
   editingText,
+  hasMore,
+  loadingMore,
+  onLoadOlder,
   onEditingTextChange,
   onEditStart,
   onEditSubmit,
   onEditCancel,
   onDelete
 }: Props) {
+  const containerRef = useRef<HTMLUListElement>(null)
+  const prevScrollHeight = useRef(0)
+
+  const handleScroll = () => {
+    const el = containerRef.current
+    if (!el || loadingMore || !hasMore) return
+    if (el.scrollTop < 100) {
+      prevScrollHeight.current = el.scrollHeight
+      onLoadOlder()
+    }
+  }
+  
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el || prevScrollHeight.current === 0) return
+    const heightDiff = el.scrollHeight - prevScrollHeight.current
+    el.scrollTop += heightDiff
+    prevScrollHeight.current = 0
+  }, [messages])
+  
   return (
-    <ul className={`${styles.wrapperDiv} ${styles.messageList}`}>
+    <ul
+      ref={containerRef}
+      onScroll={handleScroll}
+      className={styles.messageList}
+    >
+      {loadingMore && <li className={styles.loadingMore}>Loading older messages...</li>}
       {messages.map((msg) => {
         const isOwn = msg.sender.id === currentUserId
         const isEditing = editingMessageId === msg.id

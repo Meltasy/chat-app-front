@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: start;
   height: 100%;
+  min-height: 0;
 }
 
 .wrapperDiv {
@@ -146,12 +147,30 @@
 /* Messages */
 
 .messageList {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   width: 100%;
+  min-height: 0;
   overflow-y: auto;
   list-style: none;
   padding: 0;
   margin: 0;
+  scrollbar-color: var(--tertiary-color) var(--background-color);
+  scrollbar-width: thin;
+}
+
+.messageList::-webkit-scrollbar {
+  width: 0.75rem;
+}
+
+.messageList::-webkit-scrollbar-track {
+  background-color: var(--background-color);
+}
+
+.messageList::-webkit-scrollbar-thumb {
+  background: var(--tertiary-color);
+  border-radius: 0.5rem;
 }
 
 .messageItem {
@@ -167,6 +186,13 @@
 
 .messageRow span {
   padding: 0.3rem 0;
+}
+
+.loadingMore {
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  opacity: 0.6;
 }
 
 .messageActions {

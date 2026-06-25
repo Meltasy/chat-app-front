@@ -16,8 +16,8 @@ import styles from '../assets/pages/Chat.module.css'
 function Chat() {
   const { chatId } = useParams<{ chatId: string }>()
   const { user } = useOutletContext<{ user: User | null }>()
-  const { messages, setMessages, members, setMembers, chatName, setChatName, 
-    isGroup, chatLoading, error, setError } = useChatData(chatId, user)
+  const { messages, setMessages, members, setMembers, chatName, setChatName, isGroup, hasMore,
+    loadingMore, loadOlderMessages, chatLoading, error, setError } = useChatData(chatId, user)
   const { editingMessageId, editingText, setEditingText, startEditing, cancelEditing, 
     handleEditMessage } = useMessageEditing(chatId, setMessages, setError)
   const navigate = useNavigate()
@@ -184,6 +184,9 @@ function Chat() {
         currentUserId={user?.id ?? ''}
         editingMessageId={editingMessageId}
         editingText={editingText}
+        hasMore={hasMore}
+        loadingMore={loadingMore}
+        onLoadOlder={loadOlderMessages}
         onEditingTextChange={setEditingText}
         onEditStart={startEditing}
         onEditSubmit={handleEditMessage}
