@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react'
 import { useClickOutside } from '../hooks/useClickOutside'
-import { Check, X, Menu, PencilLine, UserRoundPlus, UserRoundX, 
-  UserRoundCog, ShieldUser, UserRound, Trash2, Undo2,
-} from 'lucide-react'
+import { Check, X, Menu, PencilLine, UserRoundPlus, UserRoundX, UserRoundCog, 
+  ShieldUser, UserRound, Trash2, Undo2 } from 'lucide-react'
 import styles from '../assets/pages/Chat.module.css'
 
 interface Member {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { updateMessage } from '../api.ts'
+import { updateMessage } from '../api/messages'
 
 type Message = {
   id: string, text: string, sentAt: string, sender: { id: string, username: string }

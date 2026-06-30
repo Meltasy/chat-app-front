@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
-import { createChat } from '../api.ts'
+import { createChat } from '../api/chats.ts'
 import type { User } from '../utils/authenticate.ts'
 import { useAllUsers } from '../hooks/useAllUsers.ts'
 import styles from '../assets/pages/NewChat.module.css'

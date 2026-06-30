@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import socket from '../utils/socket.ts'
-import { login } from '../api.ts'
+import { login } from '../api/auth.ts'
 import { getCurrentUser, type User } from '../utils/authenticate.ts'
 import { validateLoginForm, type LoginErrors } from '../utils/formValidation.ts'
 import styles from '../assets/pages/Home.module.css'

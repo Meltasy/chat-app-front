@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import socket from '../utils/socket.ts'
-import type { ChatPreview } from '../api'
+import type { ChatPreview } from '../api/chats.ts'
 
 interface IncomingMessage {
   id: string

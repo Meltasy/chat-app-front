@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getMessages } from '../api.ts'
+import { getMessages } from '../api/messages.ts'
 import socket from '../utils/socket.ts'
 import type { User } from '../utils/authenticate.ts'
 

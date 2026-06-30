@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getAllUsers } from '../api.ts'
+import { getAllUsers } from '../api/users'
 
 export function useAllUsers(enabled: boolean = true) {
   const [allUsers, setAllUsers] = useState<{ id: string, username: string }[]>([])

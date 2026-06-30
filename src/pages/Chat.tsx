@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useOutletContext, useNavigate } from 'react-router-dom'
 import { useSocket } from '../hooks/useSocket.ts'
-import { sendMessage, renameChat, deleteChat, addMember, updateMemberRole, removeMember, 
-  deleteMessage } from '../api.ts'
+import { sendMessage, deleteMessage } from '../api/messages.ts'
+import { renameChat, deleteChat, addMember, updateMemberRole, removeMember } from '../api/chats.ts'
 import type { User } from '../utils/authenticate.ts'
 import { useChatData } from '../hooks/useChatData.ts'
 import { useMessageEditing } from '../hooks/useMessageEditing.ts'

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getAllChats, type ChatPreview } from '../api'
+import { getAllChats, type ChatPreview } from '../api/chats'
 import type { User } from '../utils/authenticate'
 
 export function useAllChats(user: User | null) {
